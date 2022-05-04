@@ -1,30 +1,36 @@
 <script>
-	export let name;
+	import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
+    import '../node_modules/bootstrap/dist/js/bootstrap.bundle.js'
+
+	import Landing_page from '../components/land-page.svelte'
+	import Admin from '../components/Admin.svelte'
+
+	
+
+	let formVal = true;
+	
+
+	import router from 'page';
+	let current='';
+	// router('/',()=>{current=Landing_page;formVal=true;})
+
+	router('/app',()=>{current=Admin;formVal=false;})
+	// router('/test',()=>{current=Test})
+
+
+
+	
+    router.start()
 </script>
 
 <main>
-	<h1>Hello {name}!</h1>
-	<p>Visit the <a href="https://svelte.dev/tutorial">Svelte tutorial</a> to learn how to build Svelte apps.</p>
+	{#if formVal}
+	<Landing_page />
+	{:else}
+	<svelte:component this={current==Landing_page ? current='' : current=current} />
+    {/if}
 </main>
 
 <style>
-	main {
-		text-align: center;
-		padding: 1em;
-		max-width: 240px;
-		margin: 0 auto;
-	}
-
-	h1 {
-		color: #ff3e00;
-		text-transform: uppercase;
-		font-size: 4em;
-		font-weight: 100;
-	}
-
-	@media (min-width: 640px) {
-		main {
-			max-width: none;
-		}
-	}
+	
 </style>
