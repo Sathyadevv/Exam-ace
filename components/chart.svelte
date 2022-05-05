@@ -1,26 +1,29 @@
-<div class="container">
+<div class="containerr">
     <canvas id="myChart"  bind:this={ctx}></canvas>
 
 </div>
 <script>
+export let correctAnswer;
+export let wrongAnswer;
+export let notSelectedAnswer;
+
 
 import {onMount} from 'svelte';
-
 let ctx;
 
 onMount(
+    
     async ()=> {
         const myChart = new Chart(ctx, {
     type: 'doughnut',
     data: {
-        labels: ['Correct ans','Wrong ans','Not attempted'],
         datasets: [{
             label: '# of Votes',
-            data: [12, 19, 3],
+            data: [correctAnswer, wrongAnswer, notSelectedAnswer],
             backgroundColor: [
-                '#008000',
-                '#d00000',
-                '#7209b7'
+                '#35b945',
+                '#fc291ed8',
+                '#d04ed6'
             ],
             // borderColor: [
             //     'rgba(255, 99, 132, 1)',
@@ -33,13 +36,13 @@ onMount(
             borderWidth: 1
         }]
     },
-    options: {
-        scales: {
-            y: {
-                beginAtZero: true
-            }
-        }
-    }
+    // options: {
+    //     scales: {
+    //         y: {
+    //             beginAtZero: true
+    //         }
+    //     }
+    // }
 });
     }
 )
@@ -49,11 +52,9 @@ onMount(
 
  
 <style>
-    .container {
+    .containerr {
         width: 40%;
         height: auto;
-        margin: 2rem auto;
-        padding: 2rem;
     }
     
 </style>

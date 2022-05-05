@@ -1,4 +1,5 @@
 <script>
+	import Chart from './chart.svelte';
   export let time;
   export let test_Date;
   const old_count = []
@@ -8,7 +9,7 @@
     let obj = [
   {
     sno: "1",
-    image: "theimage.jpg",
+    image: "../assets/images/pexels-yan-krukov-8617735.jpg",
     question: "Stars appears to move from east to west because",
     option: ["All stars move from east to west",
       "The earth rotates from west to east",
@@ -32,7 +33,7 @@
   },
   {
     sno: "3",
-    image: "",
+    image: "../assets/images/pexels-yan-krukov-8617735.jpg",
     question: "Rectifiers are used to convert",
     option: ["Direct current to Alternating current",
       "Alternating current to Direct current",
@@ -187,31 +188,52 @@ const result = {
         minuteSecond2 = (time2 - seconds2) / 60;
         minutes2 = minuteSecond2 % 60;
         hours2 = (minuteSecond2 - minutes2) / 60;
-        console.log(time2,seconds2,minutes2,hours2)
         resultTimeVal = true;
     }
     let answerSheet = false;
+    let correctAnswersArray=[];
+    let wrongAnswersArray=[];
+    let notSelectedAnswersArray=[];
+    let correctAnswer;
+    let wrongAnswer;
+    let notSelectedAnswer;
+    const createChartVal = () => {
+
+      // for (let i = 0; i < selectedAnswers.length; i++) {
+      //   if (selectedAnswers[i] == result.question[i].ans) {
+      //     correctAnswers.push(selectedAnswers[i])
+      //   }else if (selectedAnswers[i] == 'Not-Selected') {
+      //     notSelectedAnswers.push(selectedAnswers[i])
+      //   }else {
+      //     wrongAnswers.push(selectedAnswers[i])
+      //   }
+        
+      // }
+
+            let i = 0;
+          selectedAnswers.forEach(selectedAnswer => {
+            if (selectedAnswer == result.question[i].ans) {
+              correctAnswersArray.push(selectedAnswer)
+            }else if(selectedAnswer == 'Not-Selected') {
+              notSelectedAnswersArray.push(selectedAnswer)
+            }else {
+              wrongAnswersArray.push(selectedAnswer)
+            } 
+            i++;
+          })
+          correctAnswer = correctAnswersArray.length;
+          wrongAnswer = wrongAnswersArray.length;
+          notSelectedAnswer = notSelectedAnswersArray.length;
+
+
+    }
 </script>
-<section style="background-color: { val ? 'inherit'  : '#57B973'};" >
+
+<!-- style="background-color: { val ? 'inherit'  : '#57B973'};" -->
+<section>
 {#if time>0}
 
 <div class="timer">
-  <!-- <div>{seconds}</div>
-  <input bind:value={hours} type="text">:<input bind:value={minutes} type="text">:<input bind:value={seconds} type="text"> -->
-  <!-- <h1>
-    {#if hours}
-      {'0'+hours+'H'}
-      {:else}{'0'+hours+'H'}
-    {/if} : 
-    {#if minutes < 10}
-      {'0'+minutes+'M'}
-      {:else}{minutes+'M'}
-    {/if} : 
-    {#if seconds < 10}
-      {'0'+minutes+'S'}
-      {:else}{minutes+'S'}
-    {/if}
-  </h1> -->
   <h1>{'0'+hours}:{minutes<10?'0'+minutes:minutes}:{seconds<10?'0'+seconds:seconds}</h1>
   {#if resultTimeVal}
   <h3>You finished Test in {hours2}Hrs:{minutes2}Mins:{seconds2}Secs</h3>
@@ -223,15 +245,17 @@ const result = {
     
     <div class="question-container">
         <div class="Question">
+          {#if obj[qNo].image}
+            <h5>
+              {obj[qNo].sno}. <img src={obj[qNo].image} alt="question"  class="question-image">
+            </h5>
+            {:else}
             <h5>{obj[qNo].sno}. {obj[qNo].question}</h5>
+          {/if}
+            
         </div>
         <div class="answers">
-            <!-- <select name="" id="">
-                <option value="">AC to DC</option>
-                <option value="">DC to AC</option>
-                <option value="">AC to AC</option>
-                <option value="">DC to DC</option>
-            </select> -->
+        
             <ol>
               
                 <li><input type="radio" class="answer" name="answer" id="1"><label for="1">1.{obj[qNo].option[0]}</label></li>
@@ -245,7 +269,8 @@ const result = {
     <a on:click={()=>{qNo && qNo--}} href="">Prev</a>
     <!-- svelte-ignore a11y-invalid-attribute -->
     {#if qNo==4}
-    <a on:click={()=>{getAnswer();clearInterval(counter_func);val=false;resultCount()}} href="">Submit</a>
+    <a on:click={()=>{getAnswer();clearInterval(counter_func);
+      val=false;resultCount();createChartVal()}} href="">Submit</a>
 	{:else}
 	<a on:click={()=>{getAnswer();qNo++;}} href="">Next</a>
     {/if}
@@ -256,15 +281,19 @@ const result = {
             <h2>Result</h2>
             <h4><span style="font-weight: 900;">Test-date :</span> {test_Date}</h4>
             <div class="score-card">
-              <h5>You Scored 68% of 100</h5>
+              <h3>You Scored 68% of 100</h3>
               <div class="chart-container">
-                
+                <Chart {correctAnswer} {wrongAnswer} {notSelectedAnswer} />
+                <div class="chart-text">
+                  <h5>Questions Attempted <span>77/100</span></h5>
+                  <h6><span class="bullet bullet-1"></span> Correct Answers <span>68/77</span></h6>
+                  <h6><span class="bullet bullet-2"></span> Wrong Answers <span>9/77</span></h6>
+                  <h6><span class="bullet bullet-3"></span> Questions Not Attempted <span>23/100</span></h6>
+                  <a on:click={()=>{answerSheet=!answerSheet}} href="#">Analyze Test</a>
+                </div>
               </div>
-            <h6>Questions Attemted <span>77/100</span></h6>
-            <h6>Wrong Answers <span>9/77</span></h6>
-            <h6>Questions Not Attempted <span>23/100</span></h6>
-            <h6>Negative Marks 4.5</h6>
-            <a href="">Analyze Test</a>
+
+            
             </div>
             
         </div>
@@ -391,6 +420,13 @@ const result = {
         border-radius: 6px;
         box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
     }
+    .question-container h5 {
+      margin-left: 2rem;
+    }
+    .question-container h5 .question-image {
+      width: 200px;
+      height: auto;
+    }
     main a {
         margin: 3.6rem 6rem;
         text-decoration: none;
@@ -444,24 +480,56 @@ const result = {
       border-radius: 8px;
       box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
       color: #555;
+      margin: 2rem 0;
+      background-color: #d9e4f5;
 
     }
+    .score-card .chart-container {
+      margin: 2rem 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+    }
+    .score-card h3 {
+      font-size: 2.6rem;
+    }
     .score-card h5 {
-      font-size: 3rem;
+      font-size: 1.6rem;
     }
     .score-card h6 {
-      margin: 1.2rem 0;
-      font-size: 1.8rem;
+      margin: 1.6rem 0;
     }
-    .score-card a {
-      padding: 6px 12px;
+    .score-card .chart-container h6 .bullet {
+      display: inline-block;
+      width: 12px;
+      height: 9px;
+      margin: 2px 0;
+      border-radius: 1px;
+    }
+    .score-card .chart-container h6 .bullet-1 {
+      background-color: #35b945;
+    }
+    .score-card .chart-container h6 .bullet-2{
+      background-color: #fc291ed8;
+    }
+    .score-card .chart-container h6 .bullet-3{
+      background-color: #d04ed6;
+    }
+    .score-card .chart-container a {
+      display: inline-block;
+      padding: 10px 22px;
       border-radius: 4px;
       text-decoration: none;
       background-color: #57B973;
       color: #fff;
+      transition: 0.12s all;
+      margin-top: 1rem;
+    }
+    .score-card .chart-container a:hover {
+      background-color: #35b945;
     }
     .result h2 {
-        color: #fff;
+        color: #2fa751;
         font-size: 5rem;
     }
     .result h4 {
@@ -479,7 +547,7 @@ const result = {
         color: #57B973;
     }
     .questions .results {
-      background-color: #fff;
+    background-color: #d9e4f5;
       padding: 2.6rem 3rem;
       border-radius: 8px;
       box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
