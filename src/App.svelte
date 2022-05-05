@@ -2,8 +2,8 @@
 	import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
     import '../node_modules/bootstrap/dist/js/bootstrap.bundle.js'
 
-	import Landing_page from '../components/land-page.svelte'
-	import Admin from '../components/Admin.svelte'
+	import Landing_page from './components/Landing-pag/land-page.svelte'
+	import Admin from './components/Dashboard/Admin.svelte'
 
 	
 
