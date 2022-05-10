@@ -244,22 +244,28 @@
 
       <div class="status-cards">
         <div class="status-card">
-          <h4>Total-tests</h4>
-          <h2>234</h2>
+          <h4>Plan-A</h4>
+          <h2>₹ 299</h2>
+          <h6>One Month</h6>
+          <h5>Unlimited-Tests</h5>
           <!-- svelte-ignore a11y-invalid-attribute -->
-          <a href="">Show-more</a>
+          <a class="one" href="">Show-more</a>
         </div>
         <div class="status-card">
-          <h4>Above-Avg</h4>
-          <h2>156</h2>
+          <h4>Plan-B</h4>
+          <h2>₹ 599</h2>
+          <h6>Three Months</h6>
+          <h5>Unlimited-Tests</h5>
           <!-- svelte-ignore a11y-invalid-attribute -->
-          <a href="">Show-more</a>
+          <a class="three" href="">Show-more</a>
         </div>
         <div class="status-card">
-          <h4>Below-Avg</h4>
-          <h2>78</h2>
+          <h4>Plan-C</h4>
+          <h2>₹ 999</h2>
+          <h6>Six Months</h6>
+          <h5>Unlimited-Tests</h5>
           <!-- svelte-ignore a11y-invalid-attribute -->
-          <a href="">Show-more</a>
+          <a class="six" href="">Show-more</a>
         </div>
       </div>
 
@@ -304,8 +310,7 @@
     height: 100vh;
     color: #fff;
     background-image: linear-gradient(to right, #57b973, #2fa751);
-    box-shadow: rgb(204, 219, 232) 3px 3px 6px 0px inset,
-      rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;
+    box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
     overflow: hidden;
     position: relative;
   }
@@ -354,14 +359,14 @@
   }
 
   .status-cards {
-    margin: 2rem auto;
+    margin: 2rem 2rem;
     display: flex;
     justify-content: space-around;
     gap: 2rem;
   }
   .status-cards .status-card {
     width: 100%;
-    padding: 1rem 0;
+    padding: 3rem 0;
     text-align: center;
     background-image: linear-gradient(to right, #57b973, #2fa751);
     border-radius: 6px;
@@ -382,13 +387,31 @@
   }
 
   .status-cards .status-card h2 {
-    margin: 1.4rem 0;
+    font-size: 3rem;
+    margin: 2.4rem 0;
+    
   }
   .status-cards .status-card a {
-    color: #d9e4f5;
-  }
-  .status-cards .status-card a:hover {
+    display: inline-block;
+    padding: 10px 28px;
+    /* background-color: #d9e4f5; */
     color: #fff;
+    border: #d9e4f5 2px solid;
+    border-radius: 3px;
+    margin-top: 1.5rem;
+    transition: all 0.16s;
+  }
+  .status-cards .status-card a.one:hover {
+    background-color: #d9e4f5;
+    color: #d04ed6;
+  }
+  .status-cards .status-card a.three:hover {
+    background-color: #d9e4f5;
+    color: #35b945;
+  }
+  .status-cards .status-card a.six:hover {
+    background-color: #d9e4f5;
+    color: #e62740;
   }
   main {
     width: 100%;
@@ -400,9 +423,15 @@
   }
   main h1 {
     margin-top: 1rem;
+    background: -webkit-linear-gradient(#eee, #333);
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
   main h3 {
     margin: 1rem;
+    background: -webkit-linear-gradient(#eee, #333);
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
   main .test-attend {
     padding: 0.4rem 1rem;
