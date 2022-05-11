@@ -6,8 +6,11 @@
   import Contact from "./Contact/contact.svelte";
   import Sign_in_form from "./Sign-in/sigin-form.svelte";
   import Sign_up_form from "./Sign-up/signup-form.svelte";
+  import Forgot_password from "./forgot-password.svelte";
+
 
   import router from "page";
+
   let current = "";
   router("/", () => {
     current = Home;
@@ -23,6 +26,9 @@
   });
   router("/sign-up", () => {
     current = Sign_up_form;
+  });
+  router("/forgot-password", () => {
+    current = Forgot_password;
   });
 
   router.start();

@@ -1,6 +1,27 @@
+<script>
+   import { server_URL } from "../../../config";
+  const obj = {
+    email: "",
+    password: "",
+  };
+  const createData = async () => {
+    console.log(obj.password);
+    const response = await fetch(`${server_URL}/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(obj),
+    });
+    const data = await response.json();
+    console.log(data);
+  };
+</script>
 <div class="signin">
   <div class="signin-form">
-    <form>
+    <form on:submit|preventDefault={() => {
+      createData();
+    }}>
       <h1 class="form-heading">Sign In</h1>
 
       <div class="form-floating">
@@ -9,6 +30,7 @@
           class="form-control"
           id="floatingInput"
           placeholder="name@example.com"
+          bind:value={obj.email}
         />
         <label for="floatingInput"
           >Email address
@@ -32,6 +54,7 @@
           class="form-control"
           id="floatingPassword"
           placeholder="Password"
+          bind:value={obj.password}
         />
         <label for="floatingPassword"
           >Password
@@ -49,25 +72,21 @@
           </svg>
         </label>
       </div>
-      <div class="forget-password">
-        <a href="#!">Forgot password?</a>
+      <div class="forgot-password">
+        <a href="/forgot-password">Forgot password?</a>
       </div>
-      <a href="/app">
-        <button
-          on:click={() => {
-            formVal = false;
-          }}
+      <button
           class="w-100 btn btn-lg btn-success"
           type="submit">Sign in</button
         >
-      </a>
+      
     </form>
   </div>
 </div>
 
 <style>
   .signin {
-    padding: 2rem 0;
+    padding: 3rem 0;
   }
   .signin-form {
     width: 30%;

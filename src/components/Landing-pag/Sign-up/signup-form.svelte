@@ -43,6 +43,7 @@
           id="floatingInput"
           placeholder="name@example.com"
           bind:value={obj.name}
+          required
         />
         <label for="floatingInput"
           >Name
@@ -78,6 +79,7 @@
           id="floatingInput"
           placeholder="name@example.com"
           bind:value={obj.email}
+          required
         />
         <label for="floatingInput"
           >Email address
@@ -102,6 +104,7 @@
           id="floatingPassword"
           placeholder="Password"
           bind:value={obj.password}
+          required
         />
         <label for="floatingPassword"
           >Password
