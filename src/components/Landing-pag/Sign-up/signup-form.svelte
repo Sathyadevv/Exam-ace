@@ -1,8 +1,8 @@
 <script>
-  import { server_URL } from "../../../url";
+  import { server_URL } from "../../../config";
   const obj = {
     name: "",
-    e_mail: "",
+    email: "",
     password: "",
   };
 
@@ -15,7 +15,7 @@
   //   });
   // };
   const createData = async () => {
-    const response = await fetch(`${server_URL}signup`, {
+    const response = await fetch(`${server_URL}/signup`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -77,7 +77,7 @@
           class="form-control"
           id="floatingInput"
           placeholder="name@example.com"
-          bind:value={obj.e_mail}
+          bind:value={obj.email}
         />
         <label for="floatingInput"
           >Email address

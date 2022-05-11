@@ -244,6 +244,14 @@
 
       <div class="status-cards">
         <div class="status-card">
+          <h4>Trial</h4>
+          <h2>Free</h2>
+          <h6>One Test</h6>
+          <h5>50 Questions</h5>
+          <!-- svelte-ignore a11y-invalid-attribute -->
+          <a class="free" href="">Show-more</a>
+        </div>
+        <div class="status-card">
           <h4>Plan-A</h4>
           <h2>₹ 299</h2>
           <h6>One Month</h6>
@@ -360,9 +368,9 @@
 
   .status-cards {
     margin: 2rem 2rem;
-    display: flex;
-    justify-content: space-around;
-    gap: 2rem;
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    gap: 1.4rem;
   }
   .status-cards .status-card {
     width: 100%;
@@ -377,6 +385,9 @@
     background: linear-gradient(to right, #d04ed6, #834d9b);
   }
   .status-cards .status-card:nth-child(2) {
+    background: linear-gradient(to right, #fb8500, #fb5607);
+  }
+  .status-cards .status-card:nth-child(3) {
     background-color: #378b29;
 
     background-image: linear-gradient(to left, #378b29 0%, #35b945 74%);
@@ -393,7 +404,7 @@
   }
   .status-cards .status-card a {
     display: inline-block;
-    padding: 10px 28px;
+    padding: 5% 8%;
     /* background-color: #d9e4f5; */
     color: #fff;
     border: #d9e4f5 2px solid;
@@ -401,9 +412,13 @@
     margin-top: 1.5rem;
     transition: all 0.16s;
   }
-  .status-cards .status-card a.one:hover {
+  .status-cards .status-card a.free:hover {
     background-color: #d9e4f5;
     color: #d04ed6;
+  }
+  .status-cards .status-card a.one:hover {
+    background-color: #d9e4f5;
+    color: #fb8500;
   }
   .status-cards .status-card a.three:hover {
     background-color: #d9e4f5;
@@ -555,17 +570,22 @@
     .aside .profile-links a span {
       display: none;
     }
+    .status-cards {
+      grid-template-columns: repeat(2,1fr);
+    }
   }
   @media (max-width: 600px) {
     main {
       height: 100%;
     }
-    .status-cards {
-      justify-content: center;
-      flex-wrap: wrap;
-    }
+    
     .show-aside {
       width: 36%;
+    }
+  }
+  @media (max-width: 500px) {
+    .status-cards {
+      grid-template-columns: 1fr;
     }
   }
 </style>
