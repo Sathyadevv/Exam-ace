@@ -1,10 +1,14 @@
 <script>
   import { server_URL } from "../../../config";
+  import Captcha from "./Captcha.svelte"
+
   const obj = {
     name: "",
     email: "",
     password: "",
   };
+  let statusMessage;
+  let succesMessage='Account created!, Check your email to verify account';
 
   // const getGender = () => {
   //   let genders = document.querySelectorAll(".gender");
@@ -24,10 +28,15 @@
     });
     const data = await response.json();
     console.log(data);
+    statusMessage = data.message
   };
 </script>
 
 <div class="signin">
+  {#if statusMessage}
+  <h4 style="color:{statusMessage==succesMessage?'green':'red'};" class="status-message">{statusMessage}</h4>
+
+  {/if}
   <div class="signin-form">
     <form
       on:submit|preventDefault={() => {
@@ -172,7 +181,7 @@
           >
         </div>
       </div> -->
-
+      <Captcha />
       <button class="w-100 btn btn-lg btn-success" type="submit"
         >Register</button
       >
@@ -189,7 +198,7 @@
     margin: 3rem auto;
     text-align: center;
     background-color: rgb(234, 235, 238);
-    padding: 2rem;
+    padding: 0.6rem 2rem;
     border-radius: 12px;
   }
 
@@ -212,6 +221,10 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+  }
+  .status-message {
+    text-align: center;
+    margin-top: 1rem;
   }
   /* .gender-cont {
     display: flex;

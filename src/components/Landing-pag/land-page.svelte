@@ -4,9 +4,9 @@
   import Home from "./Home/home.svelte";
   import About from "./About/about.svelte";
   import Contact from "./Contact/contact.svelte";
-  import Sign_in_form from "./Sign-in/sigin-form.svelte";
-  import Sign_up_form from "./Sign-up/signup-form.svelte";
-  import Forgot_password from "./forgot-password.svelte";
+  import Sign_in_form from "./forms/sigin-form.svelte";
+  import Sign_up_form from "./forms/signup-form.svelte";
+  import Forgot_password from "./forms/forgot-password.svelte";
 
 
   import router from "page";

@@ -1,10 +1,12 @@
 <script>
-    import { server_URL } from "../../config";
+    import { server_URL } from "../../../config";
+    import Captcha from "./Captcha.svelte"
    const obj = {
      email: "",
    };
+    let statusMessage;
+    let succesMessage='Please check your e-mail for password recovery';
    const createData = async () => {
-     console.log(obj.password);
      const response = await fetch(`${server_URL}/resetpassword`, {
        method: "POST",
        headers: {
@@ -13,10 +15,14 @@
        body: JSON.stringify(obj),
      });
      const data = await response.json();
-     console.log(data);
+    statusMessage = data.message
    };
  </script>
  <div class="signin">
+  {#if statusMessage}
+  <h4 style="color:{statusMessage==succesMessage?'green':'red'};" class="status-message">{statusMessage}</h4>
+
+  {/if}
    <div class="signin-form">
      <form on:submit|preventDefault={() => {
        createData();
@@ -56,7 +62,7 @@
      </form>
    </div>
  </div>
- 
+ <Captcha />
  <style>
    .signin {
      padding: 4rem 0;
@@ -93,6 +99,10 @@
      align-items: center;
      justify-content: space-between;
    }
+   .status-message {
+    text-align: center;
+    margin-top: 1rem;
+  }
    @media (max-width: 900px) {
      .signin-form {
        width: 50%;

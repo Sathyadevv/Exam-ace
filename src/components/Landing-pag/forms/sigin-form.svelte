@@ -1,12 +1,16 @@
 <script>
    import { server_URL } from "../../../config";
+   import Captcha from "./Captcha.svelte"
+
   const obj = {
     email: "",
     password: "",
   };
-  const createData = async () => {
+  let statusMessage;
+  let succesMessage='Logged in';
+  const createData = async (path) => {
     console.log(obj.password);
-    const response = await fetch(`${server_URL}/login`, {
+    const response = await fetch(`${server_URL}/${path}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -14,13 +18,27 @@
       body: JSON.stringify(obj),
     });
     const data = await response.json();
-    console.log(data);
+    statusMessage = data.message
   };
+  const getCaptcha = (event) => {
+    console.log(event.detail);
+  }
 </script>
 <div class="signin">
+  <div class="status-message">
+    {#if statusMessage}
+  <h4 style="color:{statusMessage==succesMessage?'green':'red'};" >{statusMessage}</h4>
+  {#if statusMessage=='This e-mail is not verified'}
+    <!-- svelte-ignore a11y-invalid-attribute -->
+    <span>Click here To<a href="#"><button on:click={()=>{createData('reverification')}}>Verify</button></a></span>
+  {/if}
+
+  {/if}
+  </div>
+  
   <div class="signin-form">
     <form on:submit|preventDefault={() => {
-      createData();
+      createData('login');
     }}>
       <h1 class="form-heading">Sign In</h1>
 
@@ -31,6 +49,7 @@
           id="floatingInput"
           placeholder="name@example.com"
           bind:value={obj.email}
+          required
         />
         <label for="floatingInput"
           >Email address
@@ -55,6 +74,7 @@
           id="floatingPassword"
           placeholder="Password"
           bind:value={obj.password}
+          required
         />
         <label for="floatingPassword"
           >Password
@@ -72,6 +92,7 @@
           </svg>
         </label>
       </div>
+      <Captcha on:captcha = {getCaptcha} />
       <div class="forgot-password">
         <a href="/forgot-password">Forgot password?</a>
       </div>
@@ -86,18 +107,18 @@
 
 <style>
   .signin {
-    padding: 3rem 0;
+    padding: 1.2rem 0;
   }
   .signin-form {
     width: 30%;
     margin: 3rem auto;
     text-align: center;
     background-color: rgb(234, 235, 238);
-    padding: 2rem;
+    padding:0.6rem 2rem;
     border-radius: 12px;
   }
 
-  .signin-form .form-heading {
+  .signin-form .form-heading:first-child {
     margin: 1rem 0;
   }
   .form-floating {
@@ -111,14 +132,24 @@
   .btn-success:hover {
     background-color: #2fa751;
   }
-  .forget-password {
-    margin: 1.6rem 0;
+  .forgot-password {
+    margin: .6rem 0;
   }
   label {
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: space-between;
+  }
+  .status-message {
+    text-align: center;
+    margin-top: 1rem;
+    margin-bottom: 10px;
+  }
+  .status-message button {
+    margin-left: 0.7rem;
+    padding: 5px 10px;
+    border-radius: 4px;
   }
   @media (max-width: 900px) {
     .signin-form {
