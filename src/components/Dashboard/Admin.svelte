@@ -3,6 +3,7 @@
 
   let val = true;
   let val2 = true;
+  let paymentVal;
   let test_catgry = "";
   let test_arr = [
     { image: "../assets/icons/icons8-medical-64.png", exam: "NEET" },
@@ -60,7 +61,7 @@
       {/if}
 
       <div class="main">
-        <img src="../assets/icons/images.jpeg" alt="" class="profile-image" />
+        <img src="https://picsum.photos/200/300" alt="" class="profile-image" />
         <h3 class="profile-name">Admin name</h3>
       </div>
       <div class="profile-links">
@@ -160,6 +161,9 @@
       <h1>Welcome Admin</h1>
 
       <h3>Attend TEST</h3>
+      {#if paymentVal}
+        
+      {/if}
       {#if val2}
         <!-- svelte-ignore a11y-invalid-attribute -->
         <a
@@ -249,7 +253,7 @@
           <h6>One Test</h6>
           <h5>50 Questions</h5>
           <!-- svelte-ignore a11y-invalid-attribute -->
-          <a class="free" href="">Show-more</a>
+          <a class="free" href="">Start Test</a>
         </div>
         <div class="status-card">
           <h4>Plan-A</h4>
@@ -257,7 +261,7 @@
           <h6>One Month</h6>
           <h5>Unlimited-Tests</h5>
           <!-- svelte-ignore a11y-invalid-attribute -->
-          <a class="one" href="">Show-more</a>
+          <a class="one" href="">Get Plan</a>
         </div>
         <div class="status-card">
           <h4>Plan-B</h4>
@@ -265,7 +269,7 @@
           <h6>Three Months</h6>
           <h5>Unlimited-Tests</h5>
           <!-- svelte-ignore a11y-invalid-attribute -->
-          <a class="three" href="">Show-more</a>
+          <a class="three" href="">Get Plan</a>
         </div>
         <div class="status-card">
           <h4>Plan-C</h4>
@@ -273,7 +277,7 @@
           <h6>Six Months</h6>
           <h5>Unlimited-Tests</h5>
           <!-- svelte-ignore a11y-invalid-attribute -->
-          <a class="six" href="">Show-more</a>
+          <a class="six" href="">Get Plan</a>
         </div>
       </div>
 
@@ -294,8 +298,7 @@
       >
     </main>
   </div>
-{:else}
-  <Test time={timer} test_Date={testDate} />
+
 {/if}
 
 <style>
@@ -330,7 +333,7 @@
     gap: 1.2rem;
   }
   .aside .profile-image {
-    width: 2.6rem;
+    width: 3rem;
     height: 3rem;
     border-radius: 50%;
   }
@@ -511,14 +514,6 @@
     position: absolute;
     right: 12px;
     top: 6px;
-  }
-  .flex {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-  }
-  .flex-g {
-    flex: 1;
   }
   .hamburger-menu {
     position: absolute;
