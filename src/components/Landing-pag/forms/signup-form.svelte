@@ -9,6 +9,8 @@
   };
   let statusMessage;
   let succesMessage='Account created!, Check your email to verify account';
+  let captchaObject;
+  let captchaCheck;
 
   // const getGender = () => {
   //   let genders = document.querySelectorAll(".gender");
@@ -181,10 +183,28 @@
           >
         </div>
       </div> -->
-      <Captcha />
-      <button class="w-100 btn btn-lg btn-success" type="submit"
-        >Register</button
-      >
+      <Captcha on:captcha = {(e)=>{
+        captchaObject=e.detail
+        captchaCheck = (captchaObject.createdCaptcha == captchaObject.typedCaptcha)
+
+      }}
+      captchaCheck={captchaCheck} 
+      on:newCaptcha = {(e)=>{
+        captchaCheck = e.detail;
+        
+      }} />
+      
+      {#if captchaCheck}
+      <button
+          class="w-100 btn btn-lg btn-success"
+          type="submit" >Register</button
+        >
+        {:else}
+        <button
+          class="w-100 btn btn-lg btn-success"
+          type="submit" disabled>Register</button
+        >
+      {/if}
     </form>
   </div>
 </div>

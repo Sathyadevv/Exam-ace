@@ -62,7 +62,6 @@
      </form>
    </div>
  </div>
- <Captcha />
  <style>
    .signin {
      padding: 4rem 0;

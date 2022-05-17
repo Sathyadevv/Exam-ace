@@ -8,8 +8,12 @@
   };
   let statusMessage;
   let succesMessage='Logged in';
+  let captchaObject;
+  let captchaCheck;
   const createData = async (path) => {
     console.log(obj.password);
+    let token;
+
     const response = await fetch(`${server_URL}/${path}`, {
       method: "POST",
       headers: {
@@ -18,10 +22,17 @@
       body: JSON.stringify(obj),
     });
     const data = await response.json();
+   
+
+    token = JSON.stringify(data)
+
+    if (token) {
+      localStorage.setItem('token' , token)
+    }
+    
+  
     statusMessage = data.message
-  };
-  const getCaptcha = (event) => {
-    console.log(event.detail);
+   
   }
 </script>
 <div class="signin">
@@ -92,14 +103,34 @@
           </svg>
         </label>
       </div>
-      <Captcha on:captcha = {getCaptcha} />
+      <Captcha on:captcha = {(e)=>{
+        captchaObject=e.detail
+        captchaCheck = (captchaObject.createdCaptcha == captchaObject.typedCaptcha)
+
+      }} 
+      captchaCheck={captchaCheck} 
+      on:newCaptcha = {(e)=>{
+        captchaCheck = e.detail;
+        
+      }}/>
       <div class="forgot-password">
         <a href="/forgot-password">Forgot password?</a>
       </div>
+      <a href={statusMessage == 'Logged in' ? '/app' : '#'}>
+        {#if captchaCheck}
       <button
           class="w-100 btn btn-lg btn-success"
-          type="submit">Sign in</button
+          type="submit" >Sign in</button
         >
+        {:else}
+        <button
+          class="w-100 btn btn-lg btn-success"
+          type="submit" disabled>Sign in</button
+        >
+      {/if}
+      </a>
+      
+      
       
     </form>
   </div>

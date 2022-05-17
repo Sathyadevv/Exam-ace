@@ -1,5 +1,6 @@
 <script>
   import Test from "./test.svelte";
+  import swal from 'sweetalert';
 
   let val = true;
   let val2 = true;
@@ -15,9 +16,28 @@
   let testDate;
   let hamVal = true;
 
+  let obj = localStorage.getItem('token')
+  
+
   let toggle = () => {
     hamVal = !hamVal;
   };
+  const getPlan = async (plan) => {
+    let buyingClient = {
+      clientID : '',
+      plan : plan
+    }
+    const response = await fetch(`${server_URL}/${path}`, {
+      method: "POST",
+      headers: {
+    Authorization: `Bearer ${obj.token}`
+  }
+    });
+    const data = await response.json();
+
+    console.log(data)
+   
+  }
 </script>
 
 {#if val}
@@ -162,89 +182,89 @@
 
       <h3>Attend TEST</h3>
       {#if paymentVal}
-        
-      {/if}
       {#if val2}
-        <!-- svelte-ignore a11y-invalid-attribute -->
-        <a
-          href=""
-          class="test-attend"
-          on:click={() => {
-            val2 = false;
-            test_catgry = 0;
-          }}
-        >
-          NEET
-        </a>
-        <!-- svelte-ignore a11y-invalid-attribute -->
-        <a
-          href=""
-          class="test-attend"
-          on:click={() => {
-            val2 = false;
-            test_catgry = 1;
-          }}
-        >
-          JAM
-        </a>
-        <!-- svelte-ignore a11y-invalid-attribute -->
-        <a
-          href=""
-          class="test-attend"
-          on:click={() => {
-            val2 = false;
-            test_catgry = 2;
-          }}
-        >
-          JEE
-        </a>
-      {:else}
-        <div class="test-card">
-          <div class="card">
-            <h3>{test_arr[test_catgry].exam}</h3>
+      <!-- svelte-ignore a11y-invalid-attribute -->
+      <a
+        href=""
+        class="test-attend"
+        on:click={() => {
+          val2 = false;
+          test_catgry = 0;
+        }}
+      >
+        NEET
+      </a>
+      <!-- svelte-ignore a11y-invalid-attribute -->
+      <a
+        href=""
+        class="test-attend"
+        on:click={() => {
+          val2 = false;
+          test_catgry = 1;
+        }}
+      >
+        JAM
+      </a>
+      <!-- svelte-ignore a11y-invalid-attribute -->
+      <a
+        href=""
+        class="test-attend"
+        on:click={() => {
+          val2 = false;
+          test_catgry = 2;
+        }}
+      >
+        JEE
+      </a>
+    {:else}
+      <div class="test-card">
+        <div class="card">
+          <h3>{test_arr[test_catgry].exam}</h3>
 
-            <button
-              class="timer-on"
-              on:click={() => {
-                showTimer = !showTimer;
-                timer = 0.5;
-                if (showTimer) {
-                  timer = 0;
-                }
-              }}>Timer-{showTimer ? "ON" : "OFF"}</button
-            >
+          <button
+            class="timer-on"
+            on:click={() => {
+              showTimer = !showTimer;
+              timer = 0.5;
+              if (showTimer) {
+                timer = 0;
+              }
+            }}>Timer-{showTimer ? "ON" : "OFF"}</button
+          >
 
-            {#if !showTimer}
-              <div class="timer-cont">
-                <button
-                  class="minus"
-                  on:click={() => {
-                    if (timer) timer = timer - 0.5;
-                  }}>-</button
-                >
-                <button class="timer">{timer} hr</button>
-                <button
-                  class="plus"
-                  on:click={() => {
-                    if (timer < 4) timer = timer + 0.5;
-                  }}>+</button
-                >
-              </div>
-            {/if}
-            <!-- svelte-ignore a11y-img-redundant-alt -->
-            <img src={test_arr[test_catgry].image} alt="test-category-image" />
+          {#if !showTimer}
+            <div class="timer-cont">
+              <button
+                class="minus"
+                on:click={() => {
+                  if (timer) timer = timer - 0.5;
+                }}>-</button
+              >
+              <button class="timer">{timer} hr</button>
+              <button
+                class="plus"
+                on:click={() => {
+                  if (timer < 4) timer = timer + 0.5;
+                }}>+</button
+              >
+            </div>
+          {/if}
+          <!-- svelte-ignore a11y-img-redundant-alt -->
+          <img src={test_arr[test_catgry].image} alt="test-category-image" />
 
-            <!-- svelte-ignore a11y-invalid-attribute -->
-            <a
-              on:click={() => {
-                val = false;
-                testDate = new Date().toLocaleString([], { hour12: true });
-              }}
-              href="">Start</a
-            >
-          </div>
+          <!-- svelte-ignore a11y-invalid-attribute -->
+          <a
+            on:click={() => {
+              val = false;
+              testDate = new Date().toLocaleString([], { hour12: true });
+            }}
+            href="">Start</a
+          >
         </div>
+      </div>
+    {/if}
       {/if}
+      
 
       <div class="status-cards">
         <div class="status-card">
@@ -253,7 +273,7 @@
           <h6>One Test</h6>
           <h5>50 Questions</h5>
           <!-- svelte-ignore a11y-invalid-attribute -->
-          <a class="free" href="">Start Test</a>
+          <a class="free" href="" >Start Test</a>
         </div>
         <div class="status-card">
           <h4>Plan-A</h4>
@@ -261,7 +281,7 @@
           <h6>One Month</h6>
           <h5>Unlimited-Tests</h5>
           <!-- svelte-ignore a11y-invalid-attribute -->
-          <a class="one" href="">Get Plan</a>
+          <a class="one" href="" on:click={() => {getPlan('Plan-A')}}>Get Plan</a>
         </div>
         <div class="status-card">
           <h4>Plan-B</h4>
@@ -269,7 +289,7 @@
           <h6>Three Months</h6>
           <h5>Unlimited-Tests</h5>
           <!-- svelte-ignore a11y-invalid-attribute -->
-          <a class="three" href="">Get Plan</a>
+          <a class="three" href="" on:click={() => {getPlan('Plan-B')}}>Get Plan</a>
         </div>
         <div class="status-card">
           <h4>Plan-C</h4>
@@ -277,9 +297,22 @@
           <h6>Six Months</h6>
           <h5>Unlimited-Tests</h5>
           <!-- svelte-ignore a11y-invalid-attribute -->
-          <a class="six" href="">Get Plan</a>
+          <a class="six" href="" on:click={() => {getPlan('Plan-C');
+            swal({
+  title: "Are you sure?",
+  text: "Are you sure that you want to leave this page?",
+  icon: "warning",
+  dangerMode: true,
+})
+.then(willDelete => {
+  if (willDelete) {
+    swal("Deleted!", "Your imaginary file has been deleted!", "success");
+  }
+});}}>Get Plan</a>
         </div>
       </div>
+      
+
 
       <!-- svelte-ignore a11y-invalid-attribute -->
       <a class="notification" href=""
@@ -298,7 +331,8 @@
       >
     </main>
   </div>
-
+{:else}
+  <Test time={timer} test_Date={testDate} />
 {/if}
 
 <style>
@@ -370,7 +404,7 @@
   }
 
   .status-cards {
-    margin: 2rem 2rem;
+    margin: 4rem 2rem;
     display: grid;
     grid-template-columns: repeat(4,1fr);
     gap: 1.4rem;
@@ -383,6 +417,10 @@
     border-radius: 6px;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
     color: #fff;
+    transition: all 0.24s ease-out;
+  }
+  .status-cards .status-card:hover {
+    transform: scale(1.04);
   }
   .status-cards .status-card:first-child {
     background: linear-gradient(to right, #d04ed6, #834d9b);
