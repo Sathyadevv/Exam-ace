@@ -1,54 +1,16 @@
 <script>
-  import Test from "./test.svelte";
-  import { payment_URL } from "../../config";
+ 
 
-  import swal from "sweetalert";
 
-  let val = true;
-  let val2 = true;
-  let paymentVal;
-  let test_catgry = "";
-  let test_arr = [
-    { image: "../assets/icons/icons8-medical-64.png", exam: "NEET" },
-    { image: "../assets/icons/icons8-chemistry-64.png", exam: "JAM" },
-    { image: "../assets/icons/icons8-engineering-64.png", exam: "JEE" },
-  ];
-  let showTimer = true;
-  let timer = 0;
-  let testDate;
   let hamVal = true;
-
-  let obj = localStorage.getItem("token");
-  console.log(obj)
-  obj = JSON.parse(obj);
-  console.log(obj)
-  obj = obj.data.token
-  console.log(obj);
+  
 
   let toggle = () => {
     hamVal = !hamVal;
   };
-  const getPlan = async (plan) => {
-    let buyingClient = {
-      plan: plan,
-      success_url: "https://localhost:8080/app/success",
-      cancel_url: "https://localhost:8080/app/failed",
-    };
-    const response = await fetch(`${payment_URL}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${obj}`,
-      },
-      body: JSON.stringify(buyingClient),
-    });
-    const data = await response.json();
-
-    console.log(data);
-  };
+  
 </script>
 
-{#if val}
   <div class="body">
     <!-- svelte-ignore a11y-invalid-attribute -->
     <a href="" class="hamburger-menu" on:click={toggle}>
@@ -188,168 +150,13 @@
     <main>
       <h1>Welcome Admin</h1>
 
-      <h3>Attend TEST</h3>
-      {#if paymentVal}
-        {#if val2}
-          <!-- svelte-ignore a11y-invalid-attribute -->
-          <a
-            href=""
-            class="test-attend"
-            on:click={() => {
-              val2 = false;
-              test_catgry = 0;
-            }}
-          >
-            NEET
-          </a>
-          <!-- svelte-ignore a11y-invalid-attribute -->
-          <a
-            href=""
-            class="test-attend"
-            on:click={() => {
-              val2 = false;
-              test_catgry = 1;
-            }}
-          >
-            JAM
-          </a>
-          <!-- svelte-ignore a11y-invalid-attribute -->
-          <a
-            href=""
-            class="test-attend"
-            on:click={() => {
-              val2 = false;
-              test_catgry = 2;
-            }}
-          >
-            JEE
-          </a>
-        {:else}
-          <div class="test-card">
-            <div class="card">
-              <h3>{test_arr[test_catgry].exam}</h3>
+      <h3>No Recent Data</h3>
+        
+      
 
-              <button
-                class="timer-on"
-                on:click={() => {
-                  showTimer = !showTimer;
-                  timer = 0.5;
-                  if (showTimer) {
-                    timer = 0;
-                  }
-                }}>Timer-{showTimer ? "ON" : "OFF"}</button
-              >
+      
+      
 
-              {#if !showTimer}
-                <div class="timer-cont">
-                  <button
-                    class="minus"
-                    on:click={() => {
-                      if (timer) timer = timer - 0.5;
-                    }}>-</button
-                  >
-                  <button class="timer">{timer} hr</button>
-                  <button
-                    class="plus"
-                    on:click={() => {
-                      if (timer < 4) timer = timer + 0.5;
-                    }}>+</button
-                  >
-                </div>
-              {/if}
-              <!-- svelte-ignore a11y-img-redundant-alt -->
-              <img
-                src={test_arr[test_catgry].image}
-                alt="test-category-image"
-              />
-
-              <!-- svelte-ignore a11y-invalid-attribute -->
-              <a
-                on:click={() => {
-                  val = false;
-                  testDate = new Date().toLocaleString([], { hour12: true });
-                }}
-                href="">Start</a
-              >
-            </div>
-          </div>
-        {/if}
-      {/if}
-      {#if !paymentVal}
-      <div class="status-cards">
-        <div class="status-card">
-          <h4>Trial</h4>
-          <h2>Free</h2>
-          <h6>One Test</h6>
-          <h5>50 Questions</h5>
-          <!-- svelte-ignore a11y-invalid-attribute -->
-          <a
-            class="free"
-            href=""
-            on:click={() => {
-              paymentVal = true;
-            }}>Start Test</a
-          >
-        </div>
-        <div class="status-card">
-          <h4>Plan-A</h4>
-          <h2>₹ 299</h2>
-          <h6>One Month</h6>
-          <h5>Unlimited-Tests</h5>
-          <!-- svelte-ignore a11y-invalid-attribute -->
-          <a
-            class="one"
-            href=""
-            on:click={() => {
-              getPlan("30");
-            }}>Get Plan</a
-          >
-        </div>
-        <div class="status-card">
-          <h4>Plan-B</h4>
-          <h2>₹ 599</h2>
-          <h6>Three Months</h6>
-          <h5>Unlimited-Tests</h5>
-          <!-- svelte-ignore a11y-invalid-attribute -->
-          <a
-            class="three"
-            href=""
-            on:click={() => {
-              getPlan("90");
-            }}>Get Plan</a
-          >
-        </div>
-        <div class="status-card">
-          <h4>Plan-C</h4>
-          <h2>₹ 999</h2>
-          <h6>Six Months</h6>
-          <h5>Unlimited-Tests</h5>
-          <!-- svelte-ignore a11y-invalid-attribute -->
-          <a
-            class="six"
-            href=""
-            on:click={() => {
-              getPlan("360");
-              swal({
-                title: "Are you sure?",
-                text: "Are you sure that you want to leave this page?",
-                icon: "warning",
-                dangerMode: true,
-              }).then((willDelete) => {
-                if (willDelete) {
-                  swal(
-                    "Deleted!",
-                    "Your imaginary file has been deleted!",
-                    "success"
-                  );
-                }
-              });
-            }}>Get Plan</a
-          >
-        </div>
-      </div>
-      {/if}
-     
 
       <!-- svelte-ignore a11y-invalid-attribute -->
       <a class="notification" href=""
@@ -368,9 +175,7 @@
       >
     </main>
   </div>
-{:else}
-  <Test time={timer} test_Date={testDate} />
-{/if}
+
 
 <style>
   img {
@@ -440,71 +245,10 @@
     background-color: #2fa751;
   }
 
-  .status-cards {
-    margin: 4rem 2rem;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1.4rem;
-  }
-  .status-cards .status-card {
-    width: 100%;
-    padding: 3rem 0;
-    text-align: center;
-    background-image: linear-gradient(to right, #57b973, #2fa751);
-    border-radius: 6px;
-    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-    color: #fff;
-    transition: all 0.24s ease-out;
-  }
-  .status-cards .status-card:hover {
-    transform: scale(1.04);
-  }
-  .status-cards .status-card:first-child {
-    background: linear-gradient(to right, #d04ed6, #834d9b);
-  }
-  .status-cards .status-card:nth-child(2) {
-    background: linear-gradient(to right, #fb8500, #fb5607);
-  }
-  .status-cards .status-card:nth-child(3) {
-    background-color: #378b29;
+  
+  
 
-    background-image: linear-gradient(to left, #378b29 0%, #35b945 74%);
-  }
-  .status-cards .status-card:last-child {
-    background-color: #f71735;
-    background-image: linear-gradient(147deg, #e62740 0%, #991a27 74%);
-  }
-
-  .status-cards .status-card h2 {
-    font-size: 3rem;
-    margin: 2.4rem 0;
-  }
-  .status-cards .status-card a {
-    display: inline-block;
-    padding: 5% 8%;
-    /* background-color: #d9e4f5; */
-    color: #fff;
-    border: #d9e4f5 2px solid;
-    border-radius: 3px;
-    margin-top: 1.5rem;
-    transition: all 0.16s;
-  }
-  .status-cards .status-card a.free:hover {
-    background-color: #d9e4f5;
-    color: #d04ed6;
-  }
-  .status-cards .status-card a.one:hover {
-    background-color: #d9e4f5;
-    color: #fb8500;
-  }
-  .status-cards .status-card a.three:hover {
-    background-color: #d9e4f5;
-    color: #35b945;
-  }
-  .status-cards .status-card a.six:hover {
-    background-color: #d9e4f5;
-    color: #e62740;
-  }
+ 
   main {
     width: 100%;
     text-align: center;
@@ -525,65 +269,10 @@
     background-clip: text;
     -webkit-text-fill-color: transparent;
   }
-  main .test-attend {
-    padding: 0.4rem 1rem;
-    background-image: linear-gradient(to right, #57b973, #2fa751);
-    border-radius: 4px;
-    color: #fff;
-    margin: 0 auto;
-    display: inline-block;
-    margin-bottom: 1rem;
-    transition: 0.12s all ease-in;
-    margin: 10px;
-  }
-  main .test-attend:hover {
-    opacity: 0.86;
-  }
+ 
 
-  .card {
-    width: 90%;
-    margin: 0 auto;
-    text-align: center;
-    background-color: rgb(255, 255, 255);
-    color: #444;
-    border-radius: 6px;
-    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-    padding: 1rem 0;
-  }
-  button {
-    border-radius: 3px;
-  }
-  .card img {
-    width: 3rem;
-    margin: 0.8rem auto;
-  }
-  .card .timer-on {
-    margin: 0.2rem auto;
-  }
-  .card .timer-cont {
-    margin: 0.2rem 0;
-  }
-  .card .timer-cont .timer {
-    padding: 8px 12px;
-    margin: 0 0.2rem;
-  }
-  .card .timer-cont .plus,
-  .card .timer-cont .minus {
-    padding: 3px 8px;
-  }
-  .card a {
-    padding: 0.4rem 5rem;
-    background-color: #57b973;
-    border-radius: 4px;
-    color: #fff;
-    margin: 0 auto;
-    display: inline-block;
-    margin-bottom: 1rem;
-    transition: 0.12s all ease-in;
-  }
-  .card a:hover {
-    background-color: #2fa751;
-  }
+  
+  
   .notification {
     position: absolute;
     right: 12px;
@@ -639,22 +328,16 @@
     .aside .profile-links a span {
       display: none;
     }
-    .status-cards {
-      grid-template-columns: repeat(2, 1fr);
-    }
+   
   }
   @media (max-width: 600px) {
     main {
-      height: 100%;
+      height: 100vh;
     }
-
+    
     .show-aside {
       width: 36%;
     }
   }
-  @media (max-width: 500px) {
-    .status-cards {
-      grid-template-columns: 1fr;
-    }
-  }
+  
 </style>

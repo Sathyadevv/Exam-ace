@@ -7,7 +7,7 @@
     password: "",
   };
   let statusMessage;
-  let succesMessage='Logged in';
+  let succesMessage='logged in';
   let captchaObject;
   let captchaCheck;
   const createData = async (path) => {
@@ -32,6 +32,10 @@
     
   
     statusMessage = data.message
+   if (statusMessage==succesMessage) {
+    window.location.replace("http://localhost:8080/app/")
+
+   }
    
   }
 </script>

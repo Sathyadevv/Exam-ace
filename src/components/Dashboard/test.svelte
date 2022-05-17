@@ -478,6 +478,7 @@
             </div>
           </div>
         </div>
+        <a href="/app" class="back-to-home" on:click={() => {window.location.replace("http://localhost:8080/app")}}>Back to Home</a>
       {/if}
     </div>
   {/if}
@@ -609,8 +610,19 @@
     color: #fff;
     transition: 0.12s all;
     margin-top: 1rem;
+  }.back-to-home {
+    display: inline-block;
+    padding: 10px 22px;
+    border-radius: 4px;
+    text-decoration: none;
+    background-color: #57b973;
+    color: #fff;
+    transition: 0.12s all;
+    margin: 0;
+    margin-bottom: 1rem;
   }
-  .score-card .chart-container a:hover {
+  .score-card .chart-container a:hover,
+  .back-to-home:hover {
     background-color: #35b945;
   }
   .result h2 {
@@ -657,7 +669,7 @@
     position: fixed;
     bottom: 3rem;
     right: 3rem;
-    color: #fff;
+    color: #35b945;
     font-size: larger;
     text-align: center;
   }
