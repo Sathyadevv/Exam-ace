@@ -28,23 +28,28 @@
   let toggle = () => {
     hamVal = !hamVal;
   };
-  const getPlan = async (plan) => {
+  const getPlan = async (e ,plan) => {
+    e.preventDefault
     let buyingClient = {
       plan: plan,
-      success_url: "https://localhost:8080/app/success",
-      cancel_url: "https://localhost:8080/app/failed",
+      success_url: "http://localhost:8080/app/success",
+      cancel_url: "http://localhost:8080/app/failed",
     };
-    const response = await fetch(`${payment_URL}`, {
+
+      const response = await fetch(`${payment_URL}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${obj}`,
+        Authorization: `Bearer ${obj}`,
+        
       },
       body: JSON.stringify(buyingClient),
     });
     const data = await response.json();
 
     console.log(data);
+    
+    
   };
 </script>
 
@@ -148,7 +153,7 @@
           </div>
         </a>
         <!-- svelte-ignore a11y-invalid-attribute -->
-        <a href="">
+        <a href="/app/settings">
           <div class="i">
             <svg
               xmlns="http://www.w3.org/2000/svg"

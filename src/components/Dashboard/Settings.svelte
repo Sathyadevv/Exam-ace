@@ -8,6 +8,7 @@
     let toggle = () => {
       hamVal = !hamVal;
     };
+    let passordChangeVal;
     
   </script>
   
@@ -150,7 +151,97 @@
       <main>
         <h1>Welcome Admin</h1>
   
-        <h3>No Chart Available</h3>
+        <h3>Settings</h3>
+        <p>Your plan will Expire in Some Days.</p>
+        <div class="user">
+          <div class="user-info">
+            <h5>Username : dummy</h5>
+            <h6>E-mail : dummymail</h6>
+            <div class="change-password">
+              <a href="#" on:click={()=>{passordChangeVal=true}}>Change Password</a>
+            </div>
+          </div>
+          {#if passordChangeVal}
+          <form>
+          
+            <div class="form-floating">
+              <input
+                type="password"
+                class="form-control"
+                id="floatingPassword"
+                placeholder="Password"
+                required
+              />
+              <label for="floatingPassword"
+                >Old Password
+                
+              </label>
+            </div>
+            <div class="form-floating">
+              <input
+                type="password"
+                class="form-control"
+                id="floatingPassword"
+                placeholder="Password"
+                required
+              />
+              <label for="floatingPassword"
+                >New Password
+                
+              </label>
+            </div>
+            <div class="form-floating">
+              <input
+                type="password"
+                class="form-control"
+                id="floatingPassword"
+                placeholder="Password"
+                required
+              />
+              <label for="floatingPassword"
+                >Re-enter New Password
+                
+            </div>
+          
+            <div class="forgot-password">
+              <a href="/forgot-password">Forgot password?</a>
+            </div>
+            
+            
+            <div class="i" on:click={()=>{passordChangeVal=false;}}>
+              <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="34"
+              height="34"
+              fill="#777"
+              class="bi bi-x"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"
+              />
+            </div>
+            
+          </form>
+          {/if}
+          
+          
+        </div>
+        <!-- <div class="form">
+          <form>
+            <label for="password">Old Password</label>
+            <input type="passord">
+            <label for="password">New Password</label>
+            <input type="passord">
+  
+            <label for="password">Re-enter New Password</label>
+            <input type="passord">
+  
+  
+          </form>
+        </div> -->
+       
+        
           
         
   
@@ -269,7 +360,42 @@
       background-clip: text;
       -webkit-text-fill-color: transparent;
     }
-   
+    main p {
+      margin-top: 2rem;
+      color:  #f71735;;
+    }
+    main .user {
+      margin: 4rem 6%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border: #2fa751 2px solid;
+      border-radius: 6px;
+      padding: 2rem;
+      justify-content: space-around;
+    }
+    main .user .user-info h6 {
+      margin: 1.2rem 0;
+    }
+    main .user form {
+      position: relative;
+      padding: 1rem;
+    }
+    
+    main form .form-floating {
+      margin: 0.7rem 0;
+    }
+    main form input {
+      height: 2.8rem;
+    }
+ 
+    main .user form .i {
+      position: absolute;
+      top: 2px;
+      right: -12px;
+      cursor: pointer;
+
+    }
   
     
     

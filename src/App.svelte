@@ -8,6 +8,8 @@
 	import Charts from './components/Dashboard/Charts.svelte'
 	import Success from './components/Dashboard/Success.svelte'
 	import Failed from './components/Dashboard/Failed.svelte'
+	import Settings from './components/Dashboard/Settings.svelte'
+
 
 
 
@@ -31,6 +33,8 @@
 	router('/app/chart',()=>{current=Charts ;formVal=false;})
 	router('/app/success',()=>{current=Success ;formVal=false;})
 	router('/app/failed',()=>{current=Failed ;formVal=false;})
+	router('/app/settings',()=>{current=Settings ;formVal=false;})
+
 
 
 

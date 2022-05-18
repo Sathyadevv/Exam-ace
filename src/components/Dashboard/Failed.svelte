@@ -146,7 +146,7 @@
             </div>
           </a>
           <!-- svelte-ignore a11y-invalid-attribute -->
-          <a href="">
+          <a href="/app/settings">
             <div class="i">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
