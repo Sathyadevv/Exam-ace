@@ -22,9 +22,19 @@
 	
 
 	import router from 'page';
-	let current='';
+	let current=Landing_page;
 	// router('/',()=>{current=Landing_page;formVal=true;})
 	// router('/test',()=>{current=Test})
+
+
+	// router('/app',()=>{current=Admin;formVal=false;})
+	// router('/app/home',()=>{current=Admin;formVal=false;})
+	// router('/app/recent',()=>{current=Recent ;formVal=false;})
+	// router('/app/chart',()=>{current=Charts ;formVal=false;})
+	// router('/app/success',()=>{current=Success ;formVal=false;})
+	// router('/app/failed',()=>{current=Failed ;formVal=false;})
+	// router('/app/settings',()=>{current=Settings ;formVal=false;})
+
 
 
 	router('/app',()=>{current=Admin;formVal=false;})
@@ -34,10 +44,6 @@
 	router('/app/success',()=>{current=Success ;formVal=false;})
 	router('/app/failed',()=>{current=Failed ;formVal=false;})
 	router('/app/settings',()=>{current=Settings ;formVal=false;})
-
-
-
-
 
 
 

@@ -1,8 +1,45 @@
 <script>
   import Test from "./test.svelte";
   import { payment_URL } from "../../config";
+  import { user_URL } from "../../config";
 
   import swal from "sweetalert";
+  import { onMount } from "svelte";
+  import { redirect } from "page";
+
+  let obj = localStorage.getItem("token");
+
+  const user = {
+    userName: "",
+    e_mail: "",
+  };
+
+  onMount(prepare);
+
+  async function prepare() {
+    if (obj == null) {
+      redirect("/sign-in");
+    }
+    obj = JSON.parse(obj);
+
+    obj = obj.data.token;
+
+    if (obj) {
+      redirect("/app");
+      const response = await fetch(`${user_URL}/data`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${obj}`,
+        },
+      });
+      const data = await response.json();
+      console.log(data);
+      user.userName = data.data.name;
+      user.e_mail = data.data.email;
+      console.log(user);
+    }
+  }
 
   let val = true;
   let val2 = true;
@@ -18,38 +55,29 @@
   let testDate;
   let hamVal = true;
 
-  let obj = localStorage.getItem("token");
-  console.log(obj)
-  obj = JSON.parse(obj);
-  console.log(obj)
-  obj = obj.data.token
-  console.log(obj);
-
   let toggle = () => {
     hamVal = !hamVal;
   };
-  const getPlan = async (e ,plan) => {
-    e.preventDefault
+  const getPlan = async (e, plan) => {
+    e.preventDefault;
     let buyingClient = {
       plan: plan,
       success_url: "http://localhost:8080/app/success",
       cancel_url: "http://localhost:8080/app/failed",
     };
+    obj = obj.data.token;
 
-      const response = await fetch(`${payment_URL}`, {
+    const response = await fetch(`${payment_URL}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${obj}`,
-        
       },
       body: JSON.stringify(buyingClient),
     });
     const data = await response.json();
 
     console.log(data);
-    
-    
   };
 </script>
 
@@ -95,7 +123,7 @@
 
       <div class="main">
         <img src="https://picsum.photos/200/300" alt="" class="profile-image" />
-        <h3 class="profile-name">Admin name</h3>
+        <h3 class="profile-name">{user.userName}</h3>
       </div>
       <div class="profile-links">
         <!-- svelte-ignore a11y-invalid-attribute -->
@@ -171,7 +199,23 @@
           </div>
         </a>
         <!-- svelte-ignore a11y-invalid-attribute -->
-        <a href="">
+        <a
+          href=""
+          on:click={() => {
+            localStorage.removeItem("token");
+            console.log(obj);
+            swal({
+              title: "Are you sure?",
+              text: "Are you sure that you want to leave this page?",
+              icon: "warning",
+              dangerMode: true,
+            }).then((willDelete) => {
+              if (willDelete) {
+                redirect("/sign-in");
+              }
+            });
+          }}
+        >
           <div class="i">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -191,7 +235,7 @@
       </div>
     </div>
     <main>
-      <h1>Welcome Admin</h1>
+      <h1>Welcome {user.userName}</h1>
 
       <h3>Attend TEST</h3>
       {#if paymentVal}
@@ -281,80 +325,79 @@
         {/if}
       {/if}
       {#if !paymentVal}
-      <div class="status-cards">
-        <div class="status-card">
-          <h4>Trial</h4>
-          <h2>Free</h2>
-          <h6>One Test</h6>
-          <h5>50 Questions</h5>
-          <!-- svelte-ignore a11y-invalid-attribute -->
-          <a
-            class="free"
-            href=""
-            on:click={() => {
-              paymentVal = true;
-            }}>Start Test</a
-          >
+        <div class="status-cards">
+          <div class="status-card">
+            <h4>Trial</h4>
+            <h2>Free</h2>
+            <h6>One Test</h6>
+            <h5>50 Questions</h5>
+            <!-- svelte-ignore a11y-invalid-attribute -->
+            <a
+              class="free"
+              href=""
+              on:click={() => {
+                paymentVal = true;
+              }}>Start Test</a
+            >
+          </div>
+          <div class="status-card">
+            <h4>Plan-A</h4>
+            <h2>₹ 299</h2>
+            <h6>One Month</h6>
+            <h5>Unlimited-Tests</h5>
+            <!-- svelte-ignore a11y-invalid-attribute -->
+            <a
+              class="one"
+              href=""
+              on:click={() => {
+                getPlan("30");
+              }}>Get Plan</a
+            >
+          </div>
+          <div class="status-card">
+            <h4>Plan-B</h4>
+            <h2>₹ 599</h2>
+            <h6>Three Months</h6>
+            <h5>Unlimited-Tests</h5>
+            <!-- svelte-ignore a11y-invalid-attribute -->
+            <a
+              class="three"
+              href=""
+              on:click={() => {
+                getPlan("90");
+              }}>Get Plan</a
+            >
+          </div>
+          <div class="status-card">
+            <h4>Plan-C</h4>
+            <h2>₹ 999</h2>
+            <h6>Six Months</h6>
+            <h5>Unlimited-Tests</h5>
+            <!-- svelte-ignore a11y-invalid-attribute -->
+            <a
+              class="six"
+              href=""
+              on:click={() => {
+                getPlan("360");
+                swal({
+                  title: "Are you sure?",
+                  text: "Are you sure that you want to leave this page?",
+                  icon: "warning",
+                  dangerMode: true,
+                }).then((willDelete) => {
+                  if (willDelete) {
+                    swal(
+                      "Deleted!",
+                      "Your imaginary file has been deleted!",
+                      "success"
+                    );
+                  }
+                });
+              }}>Get Plan</a
+            >
+          </div>
         </div>
-        <div class="status-card">
-          <h4>Plan-A</h4>
-          <h2>₹ 299</h2>
-          <h6>One Month</h6>
-          <h5>Unlimited-Tests</h5>
-          <!-- svelte-ignore a11y-invalid-attribute -->
-          <a
-            class="one"
-            href=""
-            on:click={() => {
-              getPlan("30");
-            }}>Get Plan</a
-          >
-        </div>
-        <div class="status-card">
-          <h4>Plan-B</h4>
-          <h2>₹ 599</h2>
-          <h6>Three Months</h6>
-          <h5>Unlimited-Tests</h5>
-          <!-- svelte-ignore a11y-invalid-attribute -->
-          <a
-            class="three"
-            href=""
-            on:click={() => {
-              getPlan("90");
-            }}>Get Plan</a
-          >
-        </div>
-        <div class="status-card">
-          <h4>Plan-C</h4>
-          <h2>₹ 999</h2>
-          <h6>Six Months</h6>
-          <h5>Unlimited-Tests</h5>
-          <!-- svelte-ignore a11y-invalid-attribute -->
-          <a
-            class="six"
-            href=""
-            on:click={() => {
-              getPlan("360");
-              swal({
-                title: "Are you sure?",
-                text: "Are you sure that you want to leave this page?",
-                icon: "warning",
-                dangerMode: true,
-              }).then((willDelete) => {
-                if (willDelete) {
-                  swal(
-                    "Deleted!",
-                    "Your imaginary file has been deleted!",
-                    "success"
-                  );
-                }
-              });
-            }}>Get Plan</a
-          >
-        </div>
-      </div>
       {/if}
-     
 
       <!-- svelte-ignore a11y-invalid-attribute -->
       <a class="notification" href=""

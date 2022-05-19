@@ -160,7 +160,8 @@
     margin: 1rem 0;
   }
   .btn-success {
-    width: 75%;
+    color: #fff;
+    padding: 6px 14px;
     margin: 1.2rem 0;
     background-color: #57b973;
   }
