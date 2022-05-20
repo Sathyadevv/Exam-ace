@@ -233,8 +233,11 @@
     margin: 1.2rem 0;
     background-color: #57b973;
   }
-  .btn-success:hover {
+  /* .btn-success:hover {
     background-color: #2fa751;
+  } */
+  button[disabled] {
+    background-color: rgb(167, 163, 163);
   }
   label {
     width: 100%;

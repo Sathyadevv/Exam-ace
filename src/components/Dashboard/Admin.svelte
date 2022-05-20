@@ -3,22 +3,23 @@
   import { payment_URL } from "../../config";
   import { user_URL } from "../../config";
 
-  import swal from "sweetalert";
+  import Swal from "sweetalert2";
   import { onMount } from "svelte";
   import { redirect } from "page";
 
   let obj = localStorage.getItem("token");
+  onMount(prepare);
+
 
   const user = {
     userName: "",
     e_mail: "",
   };
 
-  onMount(prepare);
 
   async function prepare() {
     if (obj == null) {
-      redirect("/sign-in");
+      window.location.replace("/sign-in");
     }
     obj = JSON.parse(obj);
 
@@ -202,19 +203,29 @@
         <a
           href=""
           on:click={() => {
-            localStorage.removeItem("token");
             console.log(obj);
-            swal({
-              title: "Are you sure?",
-              text: "Are you sure that you want to leave this page?",
-              icon: "warning",
-              dangerMode: true,
-            }).then((willDelete) => {
-              if (willDelete) {
-                redirect("/sign-in");
-              }
-            });
-          }}
+            Swal.fire({
+        title: 'Are you sure?',
+          text: "Are you sure that you want to log-out?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+        localStorage.removeItem("token");
+
+          Swal.fire(
+            'Deleted!',
+            'Your file has been deleted.',
+            'success'
+          )
+          window.location.replace("/sign-in");
+
+        }
+      })
+      }}
         >
           <div class="i">
             <svg

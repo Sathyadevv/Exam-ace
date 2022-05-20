@@ -1,23 +1,21 @@
 <script>
-  import swal from "sweetalert";
+  import Swal from "sweetalert2";
   import { onMount } from "svelte";
   import { redirect } from "page";
   import { user_URL } from "../../config";
 
   let obj = localStorage.getItem("token");
-  console.log(obj);
-  console.log(obj);
-
+  onMount(prepare);
+  
   const user = {
     userName: "",
     e_mail: "",
   };
 
-  onMount(prepare);
 
   async function prepare() {
     if (obj == null) {
-      redirect("/sign-in");
+      window.location.replace("/sign-in");
     }
     obj = JSON.parse(obj);
 
@@ -164,7 +162,30 @@
         </div>
       </a>
       <!-- svelte-ignore a11y-invalid-attribute -->
-      <a href="">
+      <a href="" on:click={() => {
+        console.log(obj);
+        Swal.fire({
+        title: 'Are you sure?',
+          text: "Are you sure that you want to log-out?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+        localStorage.removeItem("token");
+
+          Swal.fire(
+            'Deleted!',
+            'Your file has been deleted.',
+            'success'
+          )
+          window.location.replace("/sign-in");
+
+        }
+      })
+      }}>
         <div class="i">
           <svg
             xmlns="http://www.w3.org/2000/svg"

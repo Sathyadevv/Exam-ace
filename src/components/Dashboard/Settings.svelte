@@ -1,27 +1,28 @@
 <script>
-  import swal from "sweetalert";
+  import Swal from "sweetalert2";
   import { onMount } from "svelte";
   import { redirect } from "page";
   import { user_URL } from "../../config";
 
   const passwords = {
-    oldPassword: "",
-    newPassword: "",
+    old_password: "",
+    new_password: "",
     reEnteredPassword: "",
   };
 
   let obj = localStorage.getItem("token");
+  onMount(prepare);
+
 
   const user = {
     userName: "",
     e_mail: "",
   };
 
-  onMount(prepare);
 
   async function prepare() {
     if (obj == null) {
-      redirect("/sign-in");
+      window.location.replace("/sign-in");
     }
     obj = JSON.parse(obj);
 
@@ -104,7 +105,7 @@
 
     <div class="main">
       <img src="https://picsum.photos/200/300" alt="" class="profile-image" />
-      <h3 class="profile-name">Admin {user.userName}</h3>
+      <h3 class="profile-name">{user.userName}</h3>
     </div>
     <div class="profile-links">
       <!-- svelte-ignore a11y-invalid-attribute -->
@@ -180,7 +181,31 @@
         </div>
       </a>
       <!-- svelte-ignore a11y-invalid-attribute -->
-      <a href="">
+      <a href="" on:click={() => {
+        console.log(obj);
+        Swal.fire({
+        title: 'Are you sure?',
+          text: "Are you sure that you want to log-out?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+        localStorage.removeItem("token");
+
+          Swal.fire(
+            'Deleted!',
+            'Your file has been deleted.',
+            'success'
+          )
+          window.location.replace("/sign-in");
+
+        }
+      })
+      }}
+      >
         <div class="i">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -224,7 +249,7 @@
         }}>
           <div class="form-floating">
             <input
-              bind:value={passwords.oldPassword}
+              bind:value={passwords.old_password}
               type="password"
               class="form-control"
               id="floatingPassword"
@@ -235,7 +260,7 @@
           </div>
           <div class="form-floating">
             <input
-              bind:value={passwords.newPassword}
+              bind:value={passwords.new_password}
               type="password"
               class="form-control"
               id="floatingPassword"
@@ -255,7 +280,7 @@
             />
             <label for="floatingPassword">Re-enter New Password </label>
           </div>
-          {#if passwords.newPassword && passwords.reEnteredPassword && passwords.newPassword == passwords.reEnteredPassword}
+          {#if passwords.new_password && passwords.reEnteredPassword && passwords.new_password == passwords.reEnteredPassword}
             <button
               class="change-password"
               type="submit"
@@ -427,11 +452,16 @@
     justify-content: space-around;
   }
   main .user .user-info h5 {
-    font-size: 1.4rem;
+    font-size: 1.8rem;
+    color: #023e8a;
   }
   main .user .user-info h6 {
     margin: 1.2rem 0;
     font-size: 1.2rem;
+    color: #023e8a;
+  }
+  main .user .user-info .chang-password a{
+    text-decoration: underline;
   }
   main .user form {
     position: relative;
@@ -482,8 +512,11 @@
     color: #fff;
   }
 
-  .change-password:hover {
+  /* .change-password:hover {
     background-color: #2fa751;
+  } */
+  button[disabled] {
+    background-color: rgb(167, 163, 163);
   }
   .flex-1 {
     flex: 1;
@@ -520,6 +553,9 @@
     }
     .aside .profile-links a span {
       display: none;
+    }
+    main .user {
+      display: block;
     }
   }
   @media (max-width: 600px) {
