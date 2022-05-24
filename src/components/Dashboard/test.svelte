@@ -1,6 +1,40 @@
 <script>
-  export let questionPaper
-   questionPaper = questionPaper.slice(0,4)
+export let questionPaper 
+// [{id: "6287eed772c2cffce8c7df52",
+
+// answer: 1,
+// explanation: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+
+// image: "https://i.imgur.com/39I9WMB.png",
+
+// options0: [ [["https://i.imgur.com/ntlDcmL.png"], [""] ],
+
+// [["https://i.imgur.com/KgF6XHY.png"], [""]] ,
+
+// [["https://i.imgur.com/bwZPOCx.png"], [""] ],
+
+// [["https://i.imgur.com/JicYnls.png"], [""]] ],
+
+// options: [
+
+
+
+// ["https://i.imgur.com/ntlDcmL.png", ""],
+// ["https://i.imgur.com/ntlDcmL.png", ""],
+// ["https://i.imgur.com/ntlDcmL.png", ""],
+// ["https://i.imgur.com/ntlDcmL.png", ""],
+
+
+
+
+// ],
+
+// question: "33. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua?",
+// subject: "physics",
+// topic: "Topic - 33",
+// toughness: 1,
+// year: 2021}]
+   questionPaper = questionPaper.slice(0,9)
   console.log(questionPaper);
   import Chart from "./chart.svelte";
   export let time;
@@ -143,6 +177,7 @@
     },
     test: "neet",
   };
+  let save = {questionPaper}
 
   let qNo = 0;
   let col = "";
@@ -159,7 +194,7 @@
       answer.checked = false;
     });
     if (!radioSlectionChecker) {
-      selectedAnswers.push("Not-Selected");
+      selectedAnswers.push(5);
     }
     radioSlectionChecker = false;
   }
@@ -218,7 +253,7 @@
     selectedAnswers.forEach((selectedAnswer) => {
       if (selectedAnswer == questionPaper[i].answer) {
         correctAnswersArray.push(selectedAnswer);
-      } else if (selectedAnswer == "Not-Selected") {
+      } else if (selectedAnswer == 5) {
         notSelectedAnswersArray.push(selectedAnswer);
       } else {
         wrongAnswersArray.push(selectedAnswer);
@@ -266,10 +301,10 @@
             <li>
               <input type="radio" class="answer" name="answer" id="1" /><label
                 for="1">1.
-                {#if questionPaper[qNo].options[0].option1img}
-                  <img class="option-image" src={questionPaper[qNo].options[0].option1img} alt="">
+                {#if questionPaper[qNo].options[0][0]}
+                  <img class="option-image" src={questionPaper[qNo].options[0][0]} alt="">
                   {:else}
-                  {questionPaper[qNo].options[0].option1}
+                  {questionPaper[qNo].options[0][1]}
                 {/if}
                 </label
               >
@@ -277,28 +312,28 @@
             
             <li>
               <input type="radio" class="answer" name="answer" id="2" /><label
-                for="2">2.{#if questionPaper[qNo].options[1].option2img}
-                <img class="option-image" src={questionPaper[qNo].options[1].option2img} alt="">
+                for="2">2.{#if questionPaper[qNo].options[1][0]}
+                <img class="option-image" src={questionPaper[qNo].options[1][0]} alt="">
                 {:else}
-                2.{questionPaper[qNo].options[1].option2}
+                2.{questionPaper[qNo].options[1][1]}
               {/if}</label
               >
             </li>
             <li>
               <input type="radio" class="answer" name="answer" id="3" /><label
-                for="3">3.{#if questionPaper[qNo].options[2].option3img}
-                <img class="option-image" src={questionPaper[qNo].options[2].option3img} alt="">
+                for="3">3.{#if questionPaper[qNo].options[2][0]}
+                <img class="option-image" src={questionPaper[qNo].options[2][0]} alt="">
                 {:else}
-                2.{questionPaper[qNo].options[2].option3}
+                2.{questionPaper[qNo].options[2][1]}
               {/if}</label
               >
             </li>
             <li>
               <input type="radio" class="answer" name="answer" id="4" /><label
-                for="4">4.{#if questionPaper[qNo].options[3].option4img}
-                <img class="option-image" src={questionPaper[qNo].options[3].option4img} alt="">
+                for="4">4.{#if questionPaper[qNo].options[3][0]}
+                <img class="option-image" src={questionPaper[qNo].options[3][0]} alt="">
                 {:else}
-                2.{questionPaper[qNo].options[3].option4}
+                2.{questionPaper[qNo].options[3][1]}
               {/if}</label
               >
             </li>
@@ -320,7 +355,7 @@
             clearInterval(counter_func);
             val = false;
             resultCount();
-            createChartVal();console.log(questionPaper[2].options[selectedAnswers[2]][`option${selectedAnswers[2]}img`]);
+            createChartVal();console.log(selectedAnswers);
             
           }}
           href="">Submit</a
@@ -376,45 +411,49 @@
       {#if answerSheet}
         <div class="answer-sheet">
           <div class="questions">
-            <div class="results">
+            
               {#each questionPaper as question , i }
+              <div class="results">
               <h5>{i + 1}. {question.question}</h5>
 
               {#if selectedAnswers[i] == question.answer}
                 <h5 style="color: #57b973;">
                   Your Answer : 
-                  {#if question.options[question.answer][`option${question.answer}img`]}
-                  <img src={question.options[question.answer][`option${question.answer}img`]} alt="">
+                  {#if question.options[(question.answer-1)][0]}
+                  <img src={question.options[(question.answer-1)][0]} alt="">
                   
-                  {:else}<p>{question.options[question.answer][`option${question.answer}`]}</p>
+                  {:else}{question.options[(question.answer-1)][1]}
                   {/if}
-                </h5>
-              {/if}
-              {#if selectedAnswers[i] == "Not-Selected"}
+                </h5>{:else if selectedAnswers[i] == 5}
                 <h5 style="color: red;">You did't select Any answer.</h5>
-              {/if}
-              <!-- {#if !selectedAnswers[i] == question.answer}
-                <h5 style="color: red;">
-                  Your Answer : {#if question.options[selectedAnswers[i]][`option${i}img`]}
-                  <img src={question.options[selectedAnswers[i]][`option${i}img`]} alt="">
-                  {:else}<p>
-                  {question.options[selectedAnswers[i]][`option${i}`]}
-                  </p>
+                {:else}<h5 style="color: red;">
+                  Your Answer : {#if question.options[(selectedAnswers[i]-1)][0]}
+                  <img src={question.options[(selectedAnswers[i]-1)][0]} alt="">
+                  {:else}
+                  {question.options[(selectedAnswers[i]-1)][1]}
+                  
                   {/if}
                 </h5>
+
+              {/if}
+              <!-- {#if }
               {/if} -->
-              <!-- <h5 class="answer">
-                Correct answer :{#if question.options[question.answer][`option${i}img`]}
-                <img src={question.options[question.answer][`option${question.answer}img`]} alt="">
-                {:else}<p>
-                  {question.options[question.answer][`option${question.answer}`]}
-                </p>
+              <!-- {#if selectedAnswers[i] !== question.answer}
+                
+              {/if} -->
+              <h5 class="answer">
+                Correct answer : {#if question.options[(question.answer-1)][0]}
+                <img src={question.options[(question.answer-1)][0]} alt="">
+                {:else}
+                  {question.options[(question.answer-1)][1]}
+                
                 {/if}
-              </h5> -->
+              </h5>
               <h6>Explanation : {question.explanation}</h6>
+            </div>
+
               {/each}
               
-            </div>
           </div>
           <!-- <div class="questions">
             <div class="results">
@@ -522,7 +561,15 @@
     </div>
   {/if}
   {#if !val}
-    <div class="save">
+    <div class="save" on:click={()=>{
+      save.selectedAnswers = [...selectedAnswers];
+      save.metaData = [{correct_answers:correctAnswer},{wrong_answers:wrongAnswer},{not_selected_answers:notSelectedAnswer}]
+      save.testDate = [{test_Date}]
+      console.log(
+JSON.stringify(save)
+
+      );
+    }}>
       <!-- svelte-ignore a11y-invalid-attribute -->
       <a href="" class="save-btn"><i class="bi bi-save"><p>save</p></i></a>
     </div>
@@ -673,7 +720,7 @@
     opacity: 0.7;
   }
   .result .questions {
-    margin: 3rem 0;
+    margin: 2rem 0;
     text-align: left;
   }
   .result .questions h5 {
@@ -683,6 +730,7 @@
     color: #57b973;
   }
   .questions .results {
+    margin-top: 0.6rem;
     background-color: #d9e4f5;
     padding: 2.6rem 3rem;
     border-radius: 8px;
@@ -706,7 +754,7 @@
   .save-btn {
     text-decoration: none;
     position: fixed;
-    bottom: 3rem;
+    bottom: 1.6rem;
     right: 3rem;
     color: #35b945;
     font-size: larger;
