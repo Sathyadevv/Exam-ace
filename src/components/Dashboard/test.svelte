@@ -1,4 +1,7 @@
 <script>
+  export let questionPaper
+   questionPaper = questionPaper.slice(0,4)
+  console.log(questionPaper);
   import Chart from "./chart.svelte";
   export let time;
   export let test_Date;
@@ -6,7 +9,7 @@
 
   old_count.push(time * 3600);
 
-  let obj = [
+  let objj = [
     {
       sno: "1",
       image: "../assets/images/pexels-yan-krukov-8617735.jpg",
@@ -150,7 +153,7 @@
     let answers = document.querySelectorAll(".answer");
     answers.forEach((answer) => {
       if (answer.checked) {
-        selectedAnswers.push(answer.id - 1);
+        selectedAnswers.push(parseInt(answer.id));
         radioSlectionChecker = true;
       }
       answer.checked = false;
@@ -213,7 +216,7 @@
 
     let i = 0;
     selectedAnswers.forEach((selectedAnswer) => {
-      if (selectedAnswer == result.question[i].ans) {
+      if (selectedAnswer == questionPaper[i].answer) {
         correctAnswersArray.push(selectedAnswer);
       } else if (selectedAnswer == "Not-Selected") {
         notSelectedAnswersArray.push(selectedAnswer);
@@ -249,35 +252,54 @@
     <main>
       <div class="question-container">
         <div class="Question">
-          {#if obj[qNo].image}
+          {#if questionPaper[qNo].image}
             <h5>
-              {obj[qNo].sno}.
-              <img src={obj[qNo].image} alt="question" class="question-image" />
+              {qNo+1}.
+              <img src={questionPaper[qNo].image} alt="question" class="question-image" />
             </h5>
           {:else}
-            <h5>{obj[qNo].sno}. {obj[qNo].question}</h5>
+            <h5>{qNo+1}. {questionPaper[qNo].question}</h5>
           {/if}
         </div>
         <div class="answers">
           <ol>
             <li>
               <input type="radio" class="answer" name="answer" id="1" /><label
-                for="1">1.{obj[qNo].option[0]}</label
+                for="1">1.
+                {#if questionPaper[qNo].options[0].option1img}
+                  <img class="option-image" src={questionPaper[qNo].options[0].option1img} alt="">
+                  {:else}
+                  {questionPaper[qNo].options[0].option1}
+                {/if}
+                </label
               >
             </li>
+            
             <li>
               <input type="radio" class="answer" name="answer" id="2" /><label
-                for="2">2.{obj[qNo].option[1]}</label
+                for="2">2.{#if questionPaper[qNo].options[1].option2img}
+                <img class="option-image" src={questionPaper[qNo].options[1].option2img} alt="">
+                {:else}
+                2.{questionPaper[qNo].options[1].option2}
+              {/if}</label
               >
             </li>
             <li>
               <input type="radio" class="answer" name="answer" id="3" /><label
-                for="3">3.{obj[qNo].option[2]}</label
+                for="3">3.{#if questionPaper[qNo].options[2].option3img}
+                <img class="option-image" src={questionPaper[qNo].options[2].option3img} alt="">
+                {:else}
+                2.{questionPaper[qNo].options[2].option3}
+              {/if}</label
               >
             </li>
             <li>
               <input type="radio" class="answer" name="answer" id="4" /><label
-                for="4">4.{obj[qNo].option[3]}</label
+                for="4">4.{#if questionPaper[qNo].options[3].option4img}
+                <img class="option-image" src={questionPaper[qNo].options[3].option4img} alt="">
+                {:else}
+                2.{questionPaper[qNo].options[3].option4}
+              {/if}</label
               >
             </li>
           </ol>
@@ -291,14 +313,15 @@
         href="">Prev</a
       >
       <!-- svelte-ignore a11y-invalid-attribute -->
-      {#if qNo == 4}
+      {#if qNo == questionPaper.length-1}
         <a
           on:click={() => {
             getAnswer();
             clearInterval(counter_func);
             val = false;
             resultCount();
-            createChartVal();
+            createChartVal();console.log(questionPaper[2].options[selectedAnswers[2]][`option${selectedAnswers[2]}img`]);
+            
           }}
           href="">Submit</a
         >
@@ -354,30 +377,46 @@
         <div class="answer-sheet">
           <div class="questions">
             <div class="results">
-              <h5>{result.question[0].sno}. {result.question[0].question}</h5>
+              {#each questionPaper as question , i }
+              <h5>{i + 1}. {question.question}</h5>
 
-              {#if selectedAnswers[0] == result.question[0].ans}
+              {#if selectedAnswers[i] == question.answer}
                 <h5 style="color: #57b973;">
-                  Your Answer : {result.question[0].option[selectedAnswers[0]]}
+                  Your Answer : 
+                  {#if question.options[question.answer][`option${question.answer}img`]}
+                  <img src={question.options[question.answer][`option${question.answer}img`]} alt="">
+                  
+                  {:else}<p>{question.options[question.answer][`option${question.answer}`]}</p>
+                  {/if}
                 </h5>
               {/if}
-              {#if selectedAnswers[0] == "Not-Selected"}
+              {#if selectedAnswers[i] == "Not-Selected"}
                 <h5 style="color: red;">You did't select Any answer.</h5>
               {/if}
-              {#if !selectedAnswers[0] == result.question[0].ans}
+              <!-- {#if !selectedAnswers[i] == question.answer}
                 <h5 style="color: red;">
-                  Your Answer : {result.question[0].option[selectedAnswers[0]]}
+                  Your Answer : {#if question.options[selectedAnswers[i]][`option${i}img`]}
+                  <img src={question.options[selectedAnswers[i]][`option${i}img`]} alt="">
+                  {:else}<p>
+                  {question.options[selectedAnswers[i]][`option${i}`]}
+                  </p>
+                  {/if}
                 </h5>
-              {/if}
-              <h5 class="answer">
-                Correct answer :{result.question[0].option[
-                  result.question[0].ans
-                ]}
-              </h5>
-              <h6>Explanation : {result.question[0].exp}</h6>
+              {/if} -->
+              <!-- <h5 class="answer">
+                Correct answer :{#if question.options[question.answer][`option${i}img`]}
+                <img src={question.options[question.answer][`option${question.answer}img`]} alt="">
+                {:else}<p>
+                  {question.options[question.answer][`option${question.answer}`]}
+                </p>
+                {/if}
+              </h5> -->
+              <h6>Explanation : {question.explanation}</h6>
+              {/each}
+              
             </div>
           </div>
-          <div class="questions">
+          <!-- <div class="questions">
             <div class="results">
               <h5>{result.question[1].sno}. {result.question[1].question}</h5>
 
@@ -476,7 +515,7 @@
               </h5>
               <h6>Explanation : {result.question[4].exp}</h6>
             </div>
-          </div>
+          </div> -->
         </div>
         <a href="/app" class="back-to-home" on:click={() => {window.location.replace("http://localhost:8080/app")}}>Back to Home</a>
       {/if}

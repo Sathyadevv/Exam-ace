@@ -1,18 +1,11 @@
 <script>
   import Swal from "sweetalert2";
   import { onMount } from "svelte";
-  import { redirect } from "page";
-  import { user_URL } from "../../config";
-
-  const passwords = {
-    old_password: "",
-    new_password: "",
-    reEnteredPassword: "",
-  };
+  import { user_URL } from "../../../config";
 
   let obj = localStorage.getItem("token");
   onMount(prepare);
-
+  
 
   const user = {
     userName: "",
@@ -29,7 +22,7 @@
     obj = obj.data.token;
 
     if (obj) {
-      // redirect('/settings');
+      // redirect('/recent');
       const response = await fetch(`${user_URL}/data`, {
         method: "POST",
         headers: {
@@ -38,22 +31,11 @@
         },
       });
       const data = await response.json();
+      console.log(data);
       user.userName = data.data.name;
       user.e_mail = data.data.email;
+      console.log(user);
     }
-  }
-
-  async function changePassword() {
-    const response = await fetch(`${user_URL}/updatepassword`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${obj}`,
-      },
-      body: JSON.stringify(passwords),
-    });
-    const data = await response.json();
-    console.log(data);
   }
 
   let hamVal = true;
@@ -61,7 +43,6 @@
   let toggle = () => {
     hamVal = !hamVal;
   };
-  let passordChangeVal;
 </script>
 
 <div class="body">
@@ -109,7 +90,7 @@
     </div>
     <div class="profile-links">
       <!-- svelte-ignore a11y-invalid-attribute -->
-      <a href="/app/home">
+      <a href="/success/home">
         <div class="i">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -127,7 +108,7 @@
         </div>
       </a>
       <!-- svelte-ignore a11y-invalid-attribute -->
-      <a href="/app/recent">
+      <a href="/success/recent">
         <div class="i">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -145,7 +126,7 @@
         </div>
       </a>
       <!-- svelte-ignore a11y-invalid-attribute -->
-      <a href="/app/chart">
+      <a href="/success/chart">
         <div class="i">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -163,7 +144,7 @@
         </div>
       </a>
       <!-- svelte-ignore a11y-invalid-attribute -->
-      <a href="/app/settings">
+      <a href="/success/settings">
         <div class="i">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -191,21 +172,17 @@
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
         confirmButtonText: 'Yes, log-out!'
+
       }).then((result) => {
         if (result.isConfirmed) {
         localStorage.removeItem("token");
 
-          Swal.fire(
-            'Deleted!',
-            'Your file has been deleted.',
-            'success'
-          )
+          
           window.location.replace("/sign-in");
 
         }
       })
-      }}
-      >
+      }}>
         <div class="i">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -227,109 +204,7 @@
   <main>
     <h1>Welcome {user.userName}</h1>
 
-    <h3>Settings</h3>
-    <p>Your plan will Expire in Some Days.</p>
-    <div class="user">
-      <div class="user-info flex-1">
-        <h5>Username : {user.userName}</h5>
-        <h6>E-mail : {user.e_mail}</h6>
-        <div class="chang-password">
-          <!-- svelte-ignore a11y-invalid-attribute -->
-          <a
-            href="#"
-            on:click={() => {
-              passordChangeVal = true;
-            }}>Change Password</a
-          >
-        </div>
-      </div>
-      {#if passordChangeVal}
-        <form class="flex-1" on:submit|preventDefault={() => {
-          changePassword();
-        }}>
-          <div class="form-floating">
-            <input
-              bind:value={passwords.old_password}
-              type="password"
-              class="form-control"
-              id="floatingPassword"
-              placeholder="Password"
-              required
-            />
-            <label for="floatingPassword">Old Password </label>
-          </div>
-          <div class="form-floating">
-            <input
-              bind:value={passwords.new_password}
-              type="password"
-              class="form-control"
-              id="floatingPassword"
-              placeholder="Password"
-              required
-            />
-            <label for="floatingPassword">New Password </label>
-          </div>
-          <div class="form-floating">
-            <input
-              bind:value={passwords.reEnteredPassword}
-              type="password"
-              class="form-control"
-              id="floatingPassword"
-              placeholder="Password"
-              required
-            />
-            <label for="floatingPassword">Re-enter New Password </label>
-          </div>
-          {#if passwords.new_password && passwords.reEnteredPassword && passwords.new_password == passwords.reEnteredPassword}
-            <button
-              class="change-password"
-              type="submit"
-              >Change Password</button
-            >
-          {:else}
-            <button
-              disabled
-              class="change-password"
-              type="submit"
-              >Change Password</button
-            >
-          {/if}
-
-          <div
-            class="i"
-            on:click={() => {
-              passordChangeVal = false;
-            }}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="34"
-              height="34"
-              fill="#777"
-              class="bi bi-x"
-              viewBox="0 0 16 16"
-            >
-              <path
-                d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"
-              />
-            </svg>
-          </div>
-        </form>
-      {/if}
-    </div>
-    <!-- <div class="form">
-          <form>
-            <label for="password">Old Password</label>
-            <input type="passord">
-            <label for="password">New Password</label>
-            <input type="passord">
-  
-            <label for="password">Re-enter New Password</label>
-            <input type="passord">
-  
-  
-          </form>
-        </div> -->
+    <h3>No Recent Data</h3>
 
     <!-- svelte-ignore a11y-invalid-attribute -->
     <a class="notification" href=""
@@ -410,9 +285,9 @@
     gap: 2.4rem;
   }
   /* .aside .profile-links a span {
-        text-align: center;
-        padding: 0 3rem;
-    } */
+      text-align: center;
+      padding: 0 3rem;
+  } */
   .aside .profile-links a:hover {
     background-color: #2fa751;
   }
@@ -437,50 +312,6 @@
     background-clip: text;
     -webkit-text-fill-color: transparent;
   }
-  main p {
-    margin-top: 2rem;
-    color: #f71735;
-  }
-  main .user {
-    margin: 4rem 6%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: #2fa751 2px solid;
-    border-radius: 6px;
-    padding: 2rem;
-    justify-content: space-around;
-  }
-  main .user .user-info h5 {
-    font-size: 1.8rem;
-    color: #023e8a;
-  }
-  main .user .user-info h6 {
-    margin: 1.2rem 0;
-    font-size: 1.2rem;
-    color: #023e8a;
-  }
-  main .user .user-info .chang-password a{
-    text-decoration: underline;
-  }
-  main .user form {
-    position: relative;
-    padding: 1rem;
-  }
-
-  main form .form-floating {
-    margin: 0.7rem 0;
-  }
-  main form input {
-    height: 2.8rem;
-  }
-
-  main .user form .i {
-    position: absolute;
-    top: 2px;
-    right: -12px;
-    cursor: pointer;
-  }
 
   .notification {
     position: absolute;
@@ -503,23 +334,6 @@
     cursor: pointer;
     overflow: hidden;
     display: none;
-  }
-  .change-password {
-    padding: 6px 12px;
-    margin: 1.2rem 0;
-    background-color: #57b973;
-    border-radius: 5px;
-    color: #fff;
-  }
-
-  /* .change-password:hover {
-    background-color: #2fa751;
-  } */
-  button[disabled] {
-    background-color: rgb(167, 163, 163);
-  }
-  .flex-1 {
-    flex: 1;
   }
   @media (max-width: 1100px) {
     .aside .profile-links a svg {
@@ -553,9 +367,6 @@
     }
     .aside .profile-links a span {
       display: none;
-    }
-    main .user {
-      display: block;
     }
   }
   @media (max-width: 600px) {

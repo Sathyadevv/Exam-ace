@@ -1,8 +1,7 @@
 <script>
   import Swal from "sweetalert2";
   import { onMount } from "svelte";
-  import { redirect } from "page";
-  import { user_URL } from "../../config";
+  import { user_URL } from "../../../config";
 
   const passwords = {
     old_password: "",
@@ -109,7 +108,7 @@
     </div>
     <div class="profile-links">
       <!-- svelte-ignore a11y-invalid-attribute -->
-      <a href="/app/home">
+      <a href="/success/home">
         <div class="i">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -127,7 +126,7 @@
         </div>
       </a>
       <!-- svelte-ignore a11y-invalid-attribute -->
-      <a href="/app/recent">
+      <a href="/success/recent">
         <div class="i">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -145,7 +144,7 @@
         </div>
       </a>
       <!-- svelte-ignore a11y-invalid-attribute -->
-      <a href="/app/chart">
+      <a href="/success/chart">
         <div class="i">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -163,7 +162,7 @@
         </div>
       </a>
       <!-- svelte-ignore a11y-invalid-attribute -->
-      <a href="/app/settings">
+      <a href="/success/settings">
         <div class="i">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -195,11 +194,6 @@
         if (result.isConfirmed) {
         localStorage.removeItem("token");
 
-          Swal.fire(
-            'Deleted!',
-            'Your file has been deleted.',
-            'success'
-          )
           window.location.replace("/sign-in");
 
         }

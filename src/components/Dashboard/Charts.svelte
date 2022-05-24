@@ -171,7 +171,8 @@
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, delete it!'
+        confirmButtonText: 'Yes, log-out!'
+
       }).then((result) => {
         if (result.isConfirmed) {
         localStorage.removeItem("token");

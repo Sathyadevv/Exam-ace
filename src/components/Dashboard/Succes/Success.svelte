@@ -1,32 +1,33 @@
 <script>
-  import Test from "./test.svelte";
-  import { user_URL } from "../../config";
+  import Test from "../test.svelte";
+  import { user_URL } from "../../../config";
 
-  import swal from "sweetalert";
+  import Swal from "sweetalert2";
   import { onMount } from "svelte";
   import { redirect } from "page";
 
   let obj = localStorage.getItem("token");
-  console.log(obj);
-  console.log(obj);
+  onMount(prepare);
+
+  Swal('Payment Success')
+
 
   const user = {
     userName: "",
     e_mail: "",
   };
 
-  onMount(prepare);
 
   async function prepare() {
     if (obj == null) {
-      redirect("/sign-in");
+      window.location.replace("/sign-in");
     }
     obj = JSON.parse(obj);
 
     obj = obj.data.token;
 
     if (obj) {
-      // redirect('/success');
+      // redirect("/app");
       const response = await fetch(`${user_URL}/data`, {
         method: "POST",
         headers: {
@@ -42,10 +43,9 @@
     }
   }
 
-  swal("Payment Success");
-
   let val = true;
   let val2 = true;
+  let paymentVal;
   let test_catgry = "";
   let test_arr = [
     { image: "../assets/icons/icons8-medical-64.png", exam: "NEET" },
@@ -56,6 +56,11 @@
   let timer = 0;
   let testDate;
   let hamVal = true;
+
+  let toggle = () => {
+    hamVal = !hamVal;
+  };
+  
 </script>
 
 {#if val}
@@ -100,11 +105,11 @@
 
       <div class="main">
         <img src="https://picsum.photos/200/300" alt="" class="profile-image" />
-        <h3 class="profile-name">Admin {user.userName}</h3>
+        <h3 class="profile-name">{user.userName}</h3>
       </div>
       <div class="profile-links">
         <!-- svelte-ignore a11y-invalid-attribute -->
-        <a href="/app/home">
+        <a href="/success/home">
           <div class="i">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -122,7 +127,7 @@
           </div>
         </a>
         <!-- svelte-ignore a11y-invalid-attribute -->
-        <a href="/app/recent">
+        <a href="/success/recent">
           <div class="i">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -140,7 +145,7 @@
           </div>
         </a>
         <!-- svelte-ignore a11y-invalid-attribute -->
-        <a href="/app/chart">
+        <a href="/success/chart">
           <div class="i">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -158,7 +163,7 @@
           </div>
         </a>
         <!-- svelte-ignore a11y-invalid-attribute -->
-        <a href="">
+        <a href="/success/settings">
           <div class="i">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -176,7 +181,30 @@
           </div>
         </a>
         <!-- svelte-ignore a11y-invalid-attribute -->
-        <a href="">
+        <a
+          href=""
+          on:click={() => {
+            console.log(obj);
+            Swal.fire({
+        title: 'Are you sure?',
+          text: "Are you sure that you want to log-out?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, log-out!'
+
+      }).then((result) => {
+        if (result.isConfirmed) {
+        localStorage.removeItem("token");
+
+         
+          window.location.replace("/sign-in");
+
+        }
+      })
+      }}
+        >
           <div class="i">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -199,86 +227,91 @@
       <h1>Welcome {user.userName}</h1>
 
       <h3>Attend TEST</h3>
-      {#if val2}
-        <!-- svelte-ignore a11y-invalid-attribute -->
-        <a
-          href=""
-          class="test-attend"
-          on:click={() => {
-            val2 = false;
-            test_catgry = 0;
-          }}
-        >
-          NEET
-        </a>
-        <!-- svelte-ignore a11y-invalid-attribute -->
-        <a
-          href=""
-          class="test-attend"
-          on:click={() => {
-            val2 = false;
-            test_catgry = 1;
-          }}
-        >
-          JAM
-        </a>
-        <!-- svelte-ignore a11y-invalid-attribute -->
-        <a
-          href=""
-          class="test-attend"
-          on:click={() => {
-            val2 = false;
-            test_catgry = 2;
-          }}
-        >
-          JEE
-        </a>
-      {:else}
-        <div class="test-card">
-          <div class="card">
-            <h3>{test_arr[test_catgry].exam}</h3>
+      {#if paymentVal}
+        {#if val2}
+          <!-- svelte-ignore a11y-invalid-attribute -->
+          <a
+            href=""
+            class="test-attend"
+            on:click={() => {
+              val2 = false;
+              test_catgry = 0;
+            }}
+          >
+            NEET
+          </a>
+          <!-- svelte-ignore a11y-invalid-attribute -->
+          <a
+            href=""
+            class="test-attend"
+            on:click={() => {
+              val2 = false;
+              test_catgry = 1;
+            }}
+          >
+            JAM
+          </a>
+          <!-- svelte-ignore a11y-invalid-attribute -->
+          <a
+            href=""
+            class="test-attend"
+            on:click={() => {
+              val2 = false;
+              test_catgry = 2;
+            }}
+          >
+            JEE
+          </a>
+        {:else}
+          <div class="test-card">
+            <div class="card">
+              <h3>{test_arr[test_catgry].exam}</h3>
 
-            <button
-              class="timer-on"
-              on:click={() => {
-                showTimer = !showTimer;
-                timer = 0.5;
-                if (showTimer) {
-                  timer = 0;
-                }
-              }}>Timer-{showTimer ? "ON" : "OFF"}</button
-            >
+              <button
+                class="timer-on"
+                on:click={() => {
+                  showTimer = !showTimer;
+                  timer = 0.5;
+                  if (showTimer) {
+                    timer = 0;
+                  }
+                }}>Timer-{showTimer ? "ON" : "OFF"}</button
+              >
 
-            {#if !showTimer}
-              <div class="timer-cont">
-                <button
-                  class="minus"
-                  on:click={() => {
-                    if (timer) timer = timer - 0.5;
-                  }}>-</button
-                >
-                <button class="timer">{timer} hr</button>
-                <button
-                  class="plus"
-                  on:click={() => {
-                    if (timer < 4) timer = timer + 0.5;
-                  }}>+</button
-                >
-              </div>
-            {/if}
-            <!-- svelte-ignore a11y-img-redundant-alt -->
-            <img src={test_arr[test_catgry].image} alt="test-category-image" />
+              {#if !showTimer}
+                <div class="timer-cont">
+                  <button
+                    class="minus"
+                    on:click={() => {
+                      if (timer) timer = timer - 0.5;
+                    }}>-</button
+                  >
+                  <button class="timer">{timer} hr</button>
+                  <button
+                    class="plus"
+                    on:click={() => {
+                      if (timer < 4) timer = timer + 0.5;
+                    }}>+</button
+                  >
+                </div>
+              {/if}
+              <!-- svelte-ignore a11y-img-redundant-alt -->
+              <img
+                src={test_arr[test_catgry].image}
+                alt="test-category-image"
+              />
 
-            <!-- svelte-ignore a11y-invalid-attribute -->
-            <a
-              on:click={() => {
-                val = false;
-                testDate = new Date().toLocaleString([], { hour12: true });
-              }}
-              href="">Start</a
-            >
+              <!-- svelte-ignore a11y-invalid-attribute -->
+              <a
+                on:click={() => {
+                  val = false;
+                  testDate = new Date().toLocaleString([], { hour12: true });
+                }}
+                href="">Start</a
+              >
+            </div>
           </div>
-        </div>
+        {/if}
       {/if}
 
       <!-- svelte-ignore a11y-invalid-attribute -->
@@ -363,78 +396,14 @@
     gap: 2.4rem;
   }
   /* .aside .profile-links a span {
-        text-align: center;
-        padding: 0 3rem;
-    } */
+      text-align: center;
+      padding: 0 3rem;
+  } */
   .aside .profile-links a:hover {
     background-color: #2fa751;
   }
 
-  .status-cards {
-    margin: 4rem 2rem;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1.4rem;
-  }
-  .status-cards .status-card {
-    width: 100%;
-    padding: 3rem 0;
-    text-align: center;
-    background-image: linear-gradient(to right, #57b973, #2fa751);
-    border-radius: 6px;
-    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-    color: #fff;
-    transition: all 0.24s ease-out;
-  }
-  .status-cards .status-card:hover {
-    transform: scale(1.04);
-  }
-  .status-cards .status-card:first-child {
-    background: linear-gradient(to right, #d04ed6, #834d9b);
-  }
-  .status-cards .status-card:nth-child(2) {
-    background: linear-gradient(to right, #fb8500, #fb5607);
-  }
-  .status-cards .status-card:nth-child(3) {
-    background-color: #378b29;
-
-    background-image: linear-gradient(to left, #378b29 0%, #35b945 74%);
-  }
-  .status-cards .status-card:last-child {
-    background-color: #f71735;
-    background-image: linear-gradient(147deg, #e62740 0%, #991a27 74%);
-  }
-
-  .status-cards .status-card h2 {
-    font-size: 3rem;
-    margin: 2.4rem 0;
-  }
-  .status-cards .status-card a {
-    display: inline-block;
-    padding: 5% 8%;
-    /* background-color: #d9e4f5; */
-    color: #fff;
-    border: #d9e4f5 2px solid;
-    border-radius: 3px;
-    margin-top: 1.5rem;
-    transition: all 0.16s;
-  }
-  .status-cards .status-card a.free:hover {
-    background-color: #d9e4f5;
-    color: #d04ed6;
-  }
-  .status-cards .status-card a.one:hover {
-    background-color: #d9e4f5;
-    color: #fb8500;
-  }
-  .status-cards .status-card a.three:hover {
-    background-color: #d9e4f5;
-    color: #35b945;
-  }
-  .status-cards .status-card a.six:hover {
-    background-color: #d9e4f5;
-    color: #e62740;
-  }
+ 
   main {
     width: 100%;
     text-align: center;

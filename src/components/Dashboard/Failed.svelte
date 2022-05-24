@@ -3,31 +3,32 @@
   import { payment_URL } from "../../config";
   import { user_URL } from "../../config";
 
-  import swal from "sweetalert";
+  import Swal from "sweetalert2";
   import { onMount } from "svelte";
   import { redirect } from "page";
 
   let obj = localStorage.getItem("token");
-  console.log(obj);
-  console.log(obj);
+  onMount(prepare);
+
+  Swal('Payment Failed')
+
 
   const user = {
     userName: "",
     e_mail: "",
   };
 
-  onMount(prepare);
 
   async function prepare() {
     if (obj == null) {
-      redirect("/sign-in");
+      window.location.replace("/sign-in");
     }
     obj = JSON.parse(obj);
 
     obj = obj.data.token;
 
     if (obj) {
-      // redirect('/failed');
+      redirect("/app");
       const response = await fetch(`${user_URL}/data`, {
         method: "POST",
         headers: {
@@ -43,8 +44,6 @@
     }
   }
 
-  swal("Payment Failed");
-
   let val = true;
   let val2 = true;
   let paymentVal;
@@ -59,23 +58,23 @@
   let testDate;
   let hamVal = true;
 
-  // let obj = localStorage.getItem("token");
-  // obj = JSON.parse(obj);
-
   let toggle = () => {
     hamVal = !hamVal;
   };
-  const getPlan = async (plan) => {
+  const getPlan = async (e, plan) => {
+    e.preventDefault;
     let buyingClient = {
       plan: plan,
-      success_url: "https://localhost:8080/app/succes",
-      cancel_url: "https://localhost:8080/app",
+      success_url: "http://localhost:8080/success",
+      cancel_url: "http://localhost:8080/app/failed",
     };
+    obj = obj.data.token;
+
     const response = await fetch(`${payment_URL}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${obj.token}`,
+        Authorization: `Bearer ${obj}`,
       },
       body: JSON.stringify(buyingClient),
     });
@@ -203,7 +202,30 @@
           </div>
         </a>
         <!-- svelte-ignore a11y-invalid-attribute -->
-        <a href="">
+        <a
+          href=""
+          on:click={() => {
+            console.log(obj);
+            Swal.fire({
+        title: 'Are you sure?',
+          text: "Are you sure that you want to log-out?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, log-out!'
+
+      }).then((result) => {
+        if (result.isConfirmed) {
+        localStorage.removeItem("token");
+
+          
+          window.location.replace("/sign-in");
+
+        }
+      })
+      }}
+        >
           <div class="i">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -367,20 +389,7 @@
               href=""
               on:click={() => {
                 getPlan("360");
-                swal({
-                  title: "Are you sure?",
-                  text: "Are you sure that you want to leave this page?",
-                  icon: "warning",
-                  dangerMode: true,
-                }).then((willDelete) => {
-                  if (willDelete) {
-                    swal(
-                      "Deleted!",
-                      "Your imaginary file has been deleted!",
-                      "success"
-                    );
-                  }
-                });
+               
               }}>Get Plan</a
             >
           </div>
@@ -469,9 +478,9 @@
     gap: 2.4rem;
   }
   /* .aside .profile-links a span {
-        text-align: center;
-        padding: 0 3rem;
-    } */
+      text-align: center;
+      padding: 0 3rem;
+  } */
   .aside .profile-links a:hover {
     background-color: #2fa751;
   }

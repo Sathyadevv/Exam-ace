@@ -2,12 +2,14 @@
   import Test from "./test.svelte";
   import { payment_URL } from "../../config";
   import { user_URL } from "../../config";
+  import { test } from "../../config";
+
 
   import Swal from "sweetalert2";
   import { onMount } from "svelte";
-  import { redirect } from "page";
+  let orgObj = localStorage.getItem("token");
 
-  let obj = localStorage.getItem("token");
+  let obj;
   onMount(prepare);
 
 
@@ -18,15 +20,15 @@
 
 
   async function prepare() {
-    if (obj == null) {
+    if (orgObj == null) {
       window.location.replace("/sign-in");
     }
-    obj = JSON.parse(obj);
+    obj = JSON.parse(orgObj);
 
     obj = obj.data.token;
 
     if (obj) {
-      redirect("/app");
+      // redirect("/app");
       const response = await fetch(`${user_URL}/data`, {
         method: "POST",
         headers: {
@@ -42,14 +44,36 @@
     }
   }
 
+  let questionPaper;
+
+  async function getQuestionPaper() {
+
+    let sub ={ subject : [
+        ["physics", 60],
+        ["chemistry", 2]
+    ]};
+
+    const response = await fetch(`${test}/questionPaper`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${obj}`,
+        },
+        body: JSON.stringify(sub),
+      });
+      const data = await response.json();
+      questionPaper = await data.data.questions;
+
+    }
+
   let val = true;
   let val2 = true;
   let paymentVal;
   let test_catgry = "";
   let test_arr = [
     { image: "../assets/icons/icons8-medical-64.png", exam: "NEET" },
-    { image: "../assets/icons/icons8-chemistry-64.png", exam: "JAM" },
-    { image: "../assets/icons/icons8-engineering-64.png", exam: "JEE" },
+    { image: "../assets/icons/icons8-chemistry-64.png", exam: "CHEMISTRY" },
+    { image: "../assets/icons/icons8-engineering-64.png", exam: "PHYSICS" },
   ];
   let showTimer = true;
   let timer = 0;
@@ -63,9 +87,11 @@
     e.preventDefault;
     let buyingClient = {
       plan: plan,
-      success_url: "http://localhost:8080/app/success",
+      success_url: "http://localhost:8080/success",
       cancel_url: "http://localhost:8080/app/failed",
     };
+    obj = JSON.parse(orgObj);
+
     obj = obj.data.token;
 
     const response = await fetch(`${payment_URL}`, {
@@ -211,7 +237,8 @@
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, delete it!'
+        confirmButtonText: 'Yes, log-out!'
+
       }).then((result) => {
         if (result.isConfirmed) {
         localStorage.removeItem("token");
@@ -271,7 +298,7 @@
               test_catgry = 1;
             }}
           >
-            JAM
+            CHEMISTRY
           </a>
           <!-- svelte-ignore a11y-invalid-attribute -->
           <a
@@ -282,7 +309,7 @@
               test_catgry = 2;
             }}
           >
-            JEE
+            PHYSICS
           </a>
         {:else}
           <div class="test-card">
@@ -326,6 +353,7 @@
               <!-- svelte-ignore a11y-invalid-attribute -->
               <a
                 on:click={() => {
+                  getQuestionPaper();
                   val = false;
                   testDate = new Date().toLocaleString([], { hour12: true });
                 }}
@@ -390,20 +418,6 @@
               href=""
               on:click={() => {
                 getPlan("360");
-                swal({
-                  title: "Are you sure?",
-                  text: "Are you sure that you want to leave this page?",
-                  icon: "warning",
-                  dangerMode: true,
-                }).then((willDelete) => {
-                  if (willDelete) {
-                    swal(
-                      "Deleted!",
-                      "Your imaginary file has been deleted!",
-                      "success"
-                    );
-                  }
-                });
               }}>Get Plan</a
             >
           </div>
@@ -428,7 +442,9 @@
     </main>
   </div>
 {:else}
-  <Test time={timer} test_Date={testDate} />
+{#if questionPaper}
+<Test time={timer} test_Date={testDate} {questionPaper}/>
+{/if}
 {/if}
 
 <style>
