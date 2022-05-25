@@ -46,12 +46,48 @@
 
   let questionPaper;
 
-  async function getQuestionPaper() {
+  async function getQuestionPaper(subject , questionVal) {
 
-    let sub ={ subject : [
-        ["physics", 60],
-        ["chemistry", 2]
+    subject = subject.toLowerCase()
+    let sub
+
+    if (subject == 'neet') {
+      sub ={ subject : [
+        ["physics", 40],
+        ["chemistry", 40],
+        ["botany",40],
+        ["zoology",40]
+        
     ]};
+    }
+    if (subject == 'chemistry') {
+      sub ={ subject : [
+
+        ["chemistry", questionVal]
+        
+    ]};
+    }
+    if (subject == 'physics') {
+      sub ={ subject : [
+
+        ["physics", questionVal]
+        
+    ]};
+    }
+    if (subject == 'botany') {
+      sub ={ subject : [
+
+        ["botany", questionVal]
+        
+    ]};
+    }
+    if (subject == 'zoology') {
+      sub ={ subject : [
+
+        ["zoology", questionVal]
+        
+    ]};
+    }
 
     const response = await fetch(`${test}/questionPaper`, {
         method: "POST",
@@ -74,7 +110,11 @@
     { image: "../assets/icons/icons8-medical-64.png", exam: "NEET" },
     { image: "../assets/icons/icons8-chemistry-64.png", exam: "CHEMISTRY" },
     { image: "../assets/icons/icons8-engineering-64.png", exam: "PHYSICS" },
+    { image: "../assets/icons/icons8-botany-64.png", exam: "BOTANY" },
+    { image: "../assets/icons/icons8-biology-64.png", exam: "ZOOLOGY" },
+
   ];
+  let questionCount = 20;
   let showTimer = true;
   let timer = 0;
   let testDate;
@@ -311,10 +351,60 @@
           >
             PHYSICS
           </a>
+          <!-- svelte-ignore a11y-invalid-attribute -->
+          <a
+            href=""
+            class="test-attend"
+            on:click={() => {
+              val2 = false;
+              test_catgry = 3;
+            }}
+          >
+            BOTANY
+          </a>
+          <!-- svelte-ignore a11y-invalid-attribute -->
+          <a
+            href=""
+            class="test-attend"
+            on:click={() => {
+              val2 = false;
+              test_catgry = 4;
+            }}
+          >
+            ZOOLOGY
+          </a>
         {:else}
           <div class="test-card">
             <div class="card">
               <h3>{test_arr[test_catgry].exam}</h3>
+              {#if test_catgry}
+                <div>
+                  <p>no of Questions</p>
+                  <div class="timer-cont">
+                    <button
+                      class="minus"
+                      on:click={() => {
+                        if (questionCount > 20) {
+                          questionCount = questionCount - 10
+                        }else {
+                          alert('Minimum 20 questions')
+                        }
+                      }}>-</button
+                    >
+                    <button class="timer">{questionCount}</button>
+                    <button
+                      class="plus"
+                      on:click={() => {
+                        if (questionCount < 50) {
+                          questionCount = questionCount + 10
+                        }else {
+                          alert('Maximum 50 questions')
+                        }
+                      }}>+</button
+                    >
+                  </div>
+                </div>
+              {/if}
 
               <button
                 class="timer-on"
@@ -353,12 +443,26 @@
               <!-- svelte-ignore a11y-invalid-attribute -->
               <a
                 on:click={() => {
-                  getQuestionPaper();
+                  getQuestionPaper(test_arr[test_catgry].exam , questionCount);
                   val = false;
                   testDate = new Date().toLocaleString([], { hour12: true });
                 }}
                 href="">Start</a
               >
+              <div class="test-close" on:click={()=>{
+                val2 = true;
+              }}><svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="34"
+                height="34"
+                fill="#57B973"
+                class="bi bi-x"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"
+                />
+              </svg></div>
             </div>
           </div>
         {/if}
@@ -443,7 +547,8 @@
   </div>
 {:else}
 {#if questionPaper}
-<Test time={timer} test_Date={testDate} {questionPaper}/>
+<Test time={timer} test_Date={testDate} {questionPaper} subject = {test_arr[test_catgry].exam}
+token = {obj} />
 {/if}
 {/if}
 
@@ -624,6 +729,7 @@
     border-radius: 6px;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
     padding: 1rem 0;
+    position: relative;
   }
   button {
     border-radius: 3px;
@@ -663,6 +769,12 @@
     position: absolute;
     right: 12px;
     top: 6px;
+  }
+  .test-close {
+    position: absolute;
+    right: 12px;
+    top: 6px;
+    cursor: pointer;
   }
   .hamburger-menu {
     position: absolute;
@@ -719,9 +831,9 @@
     }
   }
   @media (max-width: 600px) {
-    main {
+    /* main {
       height: 100%;
-    }
+    } */
 
     .show-aside {
       width: 36%;

@@ -1,5 +1,12 @@
 <script>
-export let questionPaper 
+  import { test } from "../../config";
+
+export let questionPaper; 
+export let subject
+export let token
+
+subject = subject.toLowerCase();
+
 // [{id: "6287eed772c2cffce8c7df52",
 
 // answer: 1,
@@ -34,7 +41,7 @@ export let questionPaper
 // topic: "Topic - 33",
 // toughness: 1,
 // year: 2021}]
-   questionPaper = questionPaper.slice(0,9)
+   questionPaper = questionPaper.slice(0,4)
   console.log(questionPaper);
   import Chart from "./chart.svelte";
   export let time;
@@ -267,6 +274,23 @@ export let questionPaper
     totalQuestions = correctAnswer + wrongAnswer + notSelectedAnswer;
     questionAttempted = correctAnswer + wrongAnswer;
   };
+
+  async function saveTest(savingTest) {
+
+const response = await fetch(`${test}/save`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(savingTest),
+  });
+  const data = await response.json();
+
+  console.log(data);
+  if (data.message == 'answer paper saved!') alert('Test saved Successfully')
+
+}
 </script>
 
 <!-- style="background-color: { val ? 'inherit'  : '#57B973'};" -->
@@ -556,19 +580,21 @@ export let questionPaper
             </div>
           </div> -->
         </div>
-        <a href="/app" class="back-to-home" on:click={() => {window.location.replace("http://localhost:8080/app")}}>Back to Home</a>
+        
       {/if}
     </div>
+    <a href="/app" class="back-to-home" on:click={() => {window.location.replace("http://localhost:8080/app")}}>Back to Home</a>
   {/if}
   {#if !val}
     <div class="save" on:click={()=>{
       save.selectedAnswers = [...selectedAnswers];
-      save.metaData = [{correct_answers:correctAnswer},{wrong_answers:wrongAnswer},{not_selected_answers:notSelectedAnswer}]
-      save.testDate = [{test_Date}]
+      save.metaData = {correct_answers:correctAnswer,wrong_answers:wrongAnswer,not_selected_answers:notSelectedAnswer,test_name:subject}
+      save.testDate = test_Date
       console.log(
 JSON.stringify(save)
 
       );
+      saveTest(save)
     }}>
       <!-- svelte-ignore a11y-invalid-attribute -->
       <a href="" class="save-btn"><i class="bi bi-save"><p>save</p></i></a>
@@ -698,17 +724,22 @@ JSON.stringify(save)
     margin-top: 1rem;
   }.back-to-home {
     display: inline-block;
-    padding: 10px 22px;
+    /* padding: 10px 22px;
     border-radius: 4px;
     text-decoration: none;
     background-color: #57b973;
-    color: #fff;
+    color: #fff; */
     transition: 0.12s all;
-    margin: 0;
+    margin: 0 auto;
     margin-bottom: 1rem;
+    position: absolute;
+    top: 0.3rem;
+    left: 0.3rem;
   }
-  .score-card .chart-container a:hover,
   .back-to-home:hover {
+    opacity: 0.86;
+  }
+  .score-card .chart-container a:hover {
     background-color: #35b945;
   }
   .result h2 {
@@ -791,6 +822,9 @@ JSON.stringify(save)
     }
     .score-card h3 {
       font-size: 2rem;
+    }
+    .back-to-home {
+      font-size: 12px;
     }
   }
 </style>
