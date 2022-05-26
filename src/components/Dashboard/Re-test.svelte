@@ -1,13 +1,14 @@
 <script>
   import { test } from "../../config";
-
-  export let questionPaper;
-  export let subject;
+  export let testData;
   export let token;
+
+  let questionPaper = testData.questionPaper;
+  let subject = testData.metaData.test_name;
 
   subject = subject.toLowerCase();
 
-  //  questionPaper = questionPaper.slice(0,4)
+  // questionPaper = questionPaper.slice(0, 4);
   console.log(questionPaper);
   import Chart from "./chart.svelte";
   export let time;
@@ -316,10 +317,10 @@
                   </h5>
                 {/if}
                 <!-- {#if }
-              {/if} -->
+                {/if} -->
                 <!-- {#if selectedAnswers[i] !== question.answer}
-                
-              {/if} -->
+                  
+                {/if} -->
                 <h5 class="answer">
                   Correct answer : {#if question.options[question.answer - 1][0]}
                     <img
@@ -334,106 +335,6 @@
               </div>
             {/each}
           </div>
-          <!-- <div class="questions">
-            <div class="results">
-              <h5>{result.question[1].sno}. {result.question[1].question}</h5>
-
-              {#if selectedAnswers[1] == result.question[1].ans}
-                <h5 style="color: #57b973;">
-                  Your Answer : {result.question[1].option[selectedAnswers[1]]}
-                </h5>
-              {/if}
-              {#if selectedAnswers[1] == "Not-Selected"}
-                <h5 style="color: red;">You did't select Any answer.</h5>
-              {/if}
-              {#if !selectedAnswers[1] == result.question[1].ans}
-                <h5 style="color: red;">
-                  Your Answer : {result.question[1].option[selectedAnswers[1]]}
-                </h5>
-              {/if}
-              <h5 class="answer">
-                Correct answer :{result.question[1].option[
-                  result.question[1].ans
-                ]}
-              </h5>
-              <h6>Explanation : {result.question[1].exp}</h6>
-            </div>
-          </div>
-          <div class="questions">
-            <div class="results">
-              <h5>{result.question[2].sno}. {result.question[2].question}</h5>
-
-              {#if selectedAnswers[2] == result.question[2].ans}
-                <h5 style="color: #57b973;">
-                  Your Answer : {result.question[2].option[selectedAnswers[2]]}
-                </h5>
-              {/if}
-              {#if selectedAnswers[2] == "Not-Selected"}
-                <h5 style="color: red;">You did't select Any answer.</h5>
-              {/if}
-              {#if !selectedAnswers[2] == result.question[2].ans}
-                <h5 style="color: red;">
-                  Your Answer : {result.question[2].option[selectedAnswers[2]]}
-                </h5>
-              {/if}
-              <h5 class="answer">
-                Correct answer :{result.question[2].option[
-                  result.question[2].ans
-                ]}
-              </h5>
-              <h6>Explanation : {result.question[2].exp}</h6>
-            </div>
-          </div>
-          <div class="questions">
-            <div class="results">
-              <h5>{result.question[3].sno}. {result.question[3].question}</h5>
-
-              {#if selectedAnswers[3] == result.question[3].ans}
-                <h5 style="color: #57b973;">
-                  Your Answer : {result.question[3].option[selectedAnswers[3]]}
-                </h5>
-              {/if}
-              {#if selectedAnswers[3] == "Not-Selected"}
-                <h5 style="color: red;">You did't select Any answer.</h5>
-              {/if}
-              {#if !selectedAnswers[3] == result.question[3].ans}
-                <h5 style="color: red;">
-                  Your Answer : {result.question[3].option[selectedAnswers[3]]}
-                </h5>
-              {/if}
-              <h5 class="answer">
-                Correct answer :{result.question[3].option[
-                  result.question[3].ans
-                ]}
-              </h5>
-              <h6>Explanation : {result.question[3].exp}</h6>
-            </div>
-          </div>
-          <div class="questions">
-            <div class="results">
-              <h5>{result.question[4].sno}. {result.question[4].question}</h5>
-
-              {#if selectedAnswers[4] == result.question[4].ans}
-                <h5 style="color: #57b973;">
-                  Your Answer : {result.question[4].option[selectedAnswers[4]]}
-                </h5>
-              {/if}
-              {#if selectedAnswers[4] == "Not-Selected"}
-                <h5 style="color: red;">You did't select Any answer.</h5>
-              {/if}
-              {#if !selectedAnswers[4] == result.question[4].ans}
-                <h5 style="color: red;">
-                  Your Answer : {result.question[4].option[selectedAnswers[4]]}
-                </h5>
-              {/if}
-              <h5 class="answer">
-                Correct answer :{result.question[4].option[
-                  result.question[4].ans
-                ]}
-              </h5>
-              <h6>Explanation : {result.question[4].exp}</h6>
-            </div>
-          </div> -->
         </div>
       {/if}
     </div>
@@ -469,7 +370,7 @@
 
 <style>
   section {
-    margin-top: -4rem;
+    /* margin-top: -4rem; */
     padding: 0;
   }
   main {
@@ -480,7 +381,7 @@
     text-align: left;
     padding: 2rem 2.4rem;
     background-color: rgb(227, 238, 238);
-    width: 60%;
+    width: 80%;
     margin: 0 auto;
     border-radius: 6px;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
@@ -533,7 +434,7 @@
     cursor: pointer;
   }
   .result {
-    width: 65%;
+    width: 85%;
     margin: 0.2rem auto;
     padding: 0.2rem 0;
     text-align: center;
@@ -590,17 +491,17 @@
   }
   .back-to-home {
     display: inline-block;
-    /* padding: 10px 22px;
+    padding: 10px 22px;
     border-radius: 4px;
     text-decoration: none;
     background-color: #57b973;
-    color: #fff; */
+    color: #fff;
     transition: 0.12s all;
     margin: 0 auto;
     margin-bottom: 1rem;
-    position: absolute;
-    top: 0.3rem;
-    left: 0.3rem;
+    /* position: absolute;
+      top: 0.3rem;
+      left: 0.3rem; */
   }
   .back-to-home:hover {
     opacity: 0.86;

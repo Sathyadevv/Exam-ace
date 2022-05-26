@@ -5,10 +5,8 @@
   import { user_URL } from "../../config";
   import { test } from "../../config";
 
-
   let obj = localStorage.getItem("token");
   onMount(prepare);
-  
 
   const user = {
     userName: "",
@@ -16,8 +14,6 @@
   };
 
   let tests;
-
-
 
   async function prepare() {
     if (obj == null) {
@@ -42,8 +38,9 @@
       user.e_mail = data.data.email;
       console.log(user);
     }
-    getTests()
+    getTests();
   }
+  let welcomeVal = true;
 
   let hamVal = true;
 
@@ -51,39 +48,49 @@
     hamVal = !hamVal;
   };
 
+  import RecentTest from "./show-detail-test.svelte";
+  import ReTest from "./Re-test.svelte";
+
+  let testsVal = true;
+
+  let testData;
+  let showTimer = true;
+  let timer = 0;
+  let testTimer = true;
+  let test_Date;
+
   async function getTests() {
+    const response = await fetch(`${test}/mytests`, {
+      method: "POST",
+      // mode:'no-cors',
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${obj}`,
+      },
+    });
+    const data = await response.json();
+    tests = await data.data;
 
-const response = await fetch(`${test}/mytests`, {
-    method: "POST",
-    // mode:'no-cors',
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${obj}`,
-    }
-  });
-  const data = await response.json();
-  tests = await data.data
+    console.log(tests);
+  }
 
-  console.log(tests);
+  async function getTestData(testId) {
+    let test_id = testId;
 
-}
+    const response = await fetch(`${test}/testdetails`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${obj}`,
+      },
+      body: JSON.stringify({ test_id }),
+    });
+    const data = await response.json();
+    testData = await data.data;
 
-async function getTestData(testId) {
-  let test_id = testId
-
-const response = await fetch(`${test}/testdetails`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${obj}`,
-    },body : JSON.stringify({test_id})
-  });
-  const data = await response.json();
-
-  console.log(data);
-
-}
-
+    console.log(data);
+  }
+  let retestVal = true;
 </script>
 
 <div class="body">
@@ -125,7 +132,7 @@ const response = await fetch(`${test}/testdetails`, {
           </svg>
         </a>
       {/if}
-  
+
       <div class="main">
         <img src="https://picsum.photos/200/300" alt="" class="profile-image" />
         <h3 class="profile-name">{user.userName}</h3>
@@ -204,31 +211,28 @@ const response = await fetch(`${test}/testdetails`, {
           </div>
         </a>
         <!-- svelte-ignore a11y-invalid-attribute -->
-        <a href="" on:click={() => {
-          console.log(obj);
-          Swal.fire({
-          title: 'Are you sure?',
-            text: "Are you sure that you want to log-out?",
-          icon: 'warning',
-          showCancelButton: true,
-          confirmButtonColor: '#3085d6',
-          cancelButtonColor: '#d33',
-          confirmButtonText: 'Yes, log-out!'
-  
-        }).then((result) => {
-          if (result.isConfirmed) {
-          localStorage.removeItem("token");
-  
-            Swal.fire(
-              'Deleted!',
-              'Your file has been deleted.',
-              'success'
-            )
-            window.location.replace("/sign-in");
-  
-          }
-        })
-        }}>
+        <a
+          href=""
+          on:click={() => {
+            console.log(obj);
+            Swal.fire({
+              title: "Are you sure?",
+              text: "Are you sure that you want to log-out?",
+              icon: "warning",
+              showCancelButton: true,
+              confirmButtonColor: "#3085d6",
+              cancelButtonColor: "#d33",
+              confirmButtonText: "Yes, log-out!",
+            }).then((result) => {
+              if (result.isConfirmed) {
+                localStorage.removeItem("token");
+
+                Swal.fire("Deleted!", "Your file has been deleted.", "success");
+                window.location.replace("/sign-in");
+              }
+            });
+          }}
+        >
           <div class="i">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -248,42 +252,128 @@ const response = await fetch(`${test}/testdetails`, {
       </div>
     </div>
   </div>
-  
+
   <main>
-    <h1>Welcome {user.userName}</h1>
+    {#if welcomeVal}
+      <h1>Welcome {user.userName}</h1>
+    {/if}
 
     <!-- <h3>No Recent Data</h3> -->
 
-    {#if tests}
-    {#each tests as test}
-    <div class="test-container">
-      <div class="test-data">
-        <div class="test-content">
-          <h4>Subject : {test.metaData.test_name}</h4>
-          <h6>Test date : {test.testDate}</h6>
+    {#if tests && testsVal}
+      {#each tests as test}
+        <div class="test-container">
+          <div class="test-data">
+            <div class="test-content">
+              <h4>Subject : {test.metaData.test_name}</h4>
+              <h6>Test date : {test.testDate}</h6>
+            </div>
+            <div class="d">
+              you scored some percentile
+              <h3>72%</h3>
+            </div>
+            <div class="test-buttons">
+              <!-- svelte-ignore a11y-invalid-attribute -->
+              <a
+                href=""
+                class="show-test-details"
+                on:click={() => {
+                  getTestData(test._id);
+                  testsVal = false;
+                  welcomeVal = false;
+                }}
+              >
+                Show details
+              </a>
+              <!-- svelte-ignore a11y-invalid-attribute -->
+              <a
+                href=""
+                class="retake-test"
+                on:click={() => {
+                  getTestData(test._id);
+                  testsVal = false;
+                  retestVal = false;
+                  welcomeVal = false;
+                }}
+              >
+                Re-attend Test
+              </a>
+            </div>
+          </div>
         </div>
-        <div class="d">
-          you scored some percentile
-          <h3>72%</h3>
+      {/each}
+    {:else if testData}
+      {#if retestVal}
+        <RecentTest {testData} />
+      {:else if testTimer}
+        <div class="test-card">
+          <div class="card">
+            <button
+              class="timer-on"
+              on:click={() => {
+                showTimer = !showTimer;
+                timer = 0.5;
+                if (showTimer) {
+                  timer = 0;
+                }
+              }}>Timer-{showTimer ? "ON" : "OFF"}</button
+            >
+
+            {#if !showTimer}
+              <div class="timer-cont">
+                <button
+                  class="minus"
+                  on:click={() => {
+                    if (timer) timer = timer - 0.5;
+                  }}>-</button
+                >
+                <button class="timer">{timer} hr</button>
+                <button
+                  class="plus"
+                  on:click={() => {
+                    if (timer < 4) timer = timer + 0.5;
+                  }}>+</button
+                >
+              </div>
+            {/if}
+            <!-- svelte-ignore a11y-img-redundant-alt -->
+
+            <!-- svelte-ignore a11y-invalid-attribute -->
+            <a
+              href=""
+              on:click={() => {
+                testTimer = false;
+                test_Date = new Date().toLocaleString([], { hour12: true });
+              }}>Start</a
+            >
+            <div
+              class="test-close"
+              on:click={() => {
+                testsVal = true;
+                timer = 0;
+                showTimer = true;
+                retestVal = true;
+              }}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="34"
+                height="34"
+                fill="#57B973"
+                class="bi bi-x"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"
+                />
+              </svg>
+            </div>
+          </div>
         </div>
-        <div class="test-buttons">
-          <!-- svelte-ignore a11y-invalid-attribute -->
-          <a href="" class="show-test-details" on:click={()=>{getTestData(test._id)}}>
-            Show details
-          </a>
-          <!-- svelte-ignore a11y-invalid-attribute -->
-          <a href="" class="retake-test">
-            Re-attend Test
-          </a>
-        </div>
-      </div>
-    </div>
-    {/each}
+      {:else}
+        <ReTest {test_Date} {testData} token={obj} time={timer} />
+      {/if}
     {/if}
-
-    
-
-    
 
     <!-- svelte-ignore a11y-invalid-attribute -->
     <a class="notification" href=""
@@ -378,7 +468,8 @@ const response = await fetch(`${test}/testdetails`, {
     width: 80%;
     margin-left: auto;
     text-align: center;
-    height: 100%;
+    max-height: 100%;
+    min-height: 100vh;
     padding: 0 2rem;
     background-color: #d9e4f5;
     background-image: linear-gradient(315deg, #d9e4f5 0%, #f5e3e6 74%);
@@ -397,7 +488,7 @@ const response = await fetch(`${test}/testdetails`, {
   }
   main .test-container {
     width: 80%;
-    margin:1.2rem auto;
+    margin: 1.2rem auto;
     padding: 1.8rem 3rem;
     background-color: #fff;
     border-radius: 10px;
@@ -449,6 +540,55 @@ const response = await fetch(`${test}/testdetails`, {
     overflow: hidden;
     display: none;
   }
+  .test-close {
+    position: absolute;
+    right: 12px;
+    top: 6px;
+    cursor: pointer;
+  }
+  .card {
+    width: 90%;
+    margin: 0 auto;
+    margin-top: 2.4rem;
+    text-align: center;
+    background-color: rgb(255, 255, 255);
+    color: #444;
+    border-radius: 6px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    padding: 1rem 0;
+    position: relative;
+  }
+  button {
+    border-radius: 3px;
+  }
+
+  .card .timer-on {
+    margin: 0.2rem auto;
+  }
+  .card .timer-cont {
+    margin: 0.2rem 0;
+  }
+  .card .timer-cont .timer {
+    padding: 8px 12px;
+    margin: 0 0.2rem;
+  }
+  .card .timer-cont .plus,
+  .card .timer-cont .minus {
+    padding: 3px 8px;
+  }
+  .card a {
+    padding: 0.4rem 5rem;
+    background-color: #57b973;
+    border-radius: 4px;
+    color: #fff;
+    margin: 0.6rem auto;
+    display: inline-block;
+    margin-bottom: 1rem;
+    transition: 0.12s all ease-in;
+  }
+  .card a:hover {
+    background-color: #2fa751;
+  }
   @media (max-width: 1100px) {
     .aside .profile-links a svg {
       display: none;
@@ -458,7 +598,6 @@ const response = await fetch(`${test}/testdetails`, {
       justify-content: center;
       padding-left: 0;
     }
-
   }
   @media (max-width: 960px) {
     .aside {
@@ -480,8 +619,7 @@ const response = await fetch(`${test}/testdetails`, {
     }
     main .test-container {
       width: 90%;
-    padding: 1.8rem 3rem;
-
+      padding: 1.8rem 3rem;
     }
     main .test-container .test-data {
       display: block;
@@ -497,13 +635,15 @@ const response = await fetch(`${test}/testdetails`, {
     }
     main .test-container {
       width: 90%;
-    padding: 1.6rem 2rem;
-
+      padding: 1.6rem 2rem;
     }
   }
   @media (max-width: 600px) {
-    main {
+    /* main {
       height: 100vh;
+    } */
+    main {
+      height: 100%;
     }
 
     .show-aside {

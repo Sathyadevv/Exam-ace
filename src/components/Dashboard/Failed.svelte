@@ -10,14 +10,12 @@
   let obj = localStorage.getItem("token");
   onMount(prepare);
 
-  Swal('Payment Failed')
-
+  Swal("Payment Failed");
 
   const user = {
     userName: "",
     e_mail: "",
   };
-
 
   async function prepare() {
     if (obj == null) {
@@ -207,24 +205,21 @@
           on:click={() => {
             console.log(obj);
             Swal.fire({
-        title: 'Are you sure?',
-          text: "Are you sure that you want to log-out?",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, log-out!'
+              title: "Are you sure?",
+              text: "Are you sure that you want to log-out?",
+              icon: "warning",
+              showCancelButton: true,
+              confirmButtonColor: "#3085d6",
+              cancelButtonColor: "#d33",
+              confirmButtonText: "Yes, log-out!",
+            }).then((result) => {
+              if (result.isConfirmed) {
+                localStorage.removeItem("token");
 
-      }).then((result) => {
-        if (result.isConfirmed) {
-        localStorage.removeItem("token");
-
-          
-          window.location.replace("/sign-in");
-
-        }
-      })
-      }}
+                window.location.replace("/sign-in");
+              }
+            });
+          }}
         >
           <div class="i">
             <svg
@@ -389,7 +384,6 @@
               href=""
               on:click={() => {
                 getPlan("360");
-               
               }}>Get Plan</a
             >
           </div>

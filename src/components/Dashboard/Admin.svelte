@@ -4,7 +4,6 @@
   import { user_URL } from "../../config";
   import { test } from "../../config";
 
-
   import Swal from "sweetalert2";
   import { onMount } from "svelte";
   let orgObj = localStorage.getItem("token");
@@ -12,12 +11,10 @@
   let obj;
   onMount(prepare);
 
-
   const user = {
     userName: "",
     e_mail: "",
   };
-
 
   async function prepare() {
     if (orgObj == null) {
@@ -46,61 +43,44 @@
 
   let questionPaper;
 
-  async function getQuestionPaper(subject , questionVal) {
+  async function getQuestionPaper(subject, questionVal) {
+    subject = subject.toLowerCase();
+    let sub;
 
-    subject = subject.toLowerCase()
-    let sub
-
-    if (subject == 'neet') {
-      sub ={ subject : [
-        ["physics", 40],
-        ["chemistry", 40],
-        ["botany",40],
-        ["zoology",40]
-        
-    ]};
+    if (subject == "neet") {
+      sub = {
+        subject: [
+          ["physics", 40],
+          ["chemistry", 40],
+          ["botany", 40],
+          ["zoology", 40],
+        ],
+      };
     }
-    if (subject == 'chemistry') {
-      sub ={ subject : [
-
-        ["chemistry", questionVal]
-        
-    ]};
+    if (subject == "chemistry") {
+      sub = { subject: [["chemistry", questionVal]] };
     }
-    if (subject == 'physics') {
-      sub ={ subject : [
-
-        ["physics", questionVal]
-        
-    ]};
+    if (subject == "physics") {
+      sub = { subject: [["physics", questionVal]] };
     }
-    if (subject == 'botany') {
-      sub ={ subject : [
-
-        ["botany", questionVal]
-        
-    ]};
+    if (subject == "botany") {
+      sub = { subject: [["botany", questionVal]] };
     }
-    if (subject == 'zoology') {
-      sub ={ subject : [
-
-        ["zoology", questionVal]
-        
-    ]};
+    if (subject == "zoology") {
+      sub = { subject: [["zoology", questionVal]] };
     }
 
     const response = await fetch(`${test}/questionPaper`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${obj}`,
-        },
-        body: JSON.stringify(sub),
-      });
-      const data = await response.json();
-      questionPaper = await data.data.questions;
-
-    }
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${obj}`,
+      },
+      body: JSON.stringify(sub),
+    });
+    const data = await response.json();
+    questionPaper = await data.data.questions;
+  }
 
   let val = true;
   let val2 = true;
@@ -112,7 +92,6 @@
     { image: "../assets/icons/icons8-engineering-64.png", exam: "PHYSICS" },
     { image: "../assets/icons/icons8-botany-64.png", exam: "BOTANY" },
     { image: "../assets/icons/icons8-biology-64.png", exam: "ZOOLOGY" },
-
   ];
   let questionCount = 20;
   let showTimer = true;
@@ -271,28 +250,22 @@
           on:click={() => {
             console.log(obj);
             Swal.fire({
-        title: 'Are you sure?',
-          text: "Are you sure that you want to log-out?",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, log-out!'
+              title: "Are you sure?",
+              text: "Are you sure that you want to log-out?",
+              icon: "warning",
+              showCancelButton: true,
+              confirmButtonColor: "#3085d6",
+              cancelButtonColor: "#d33",
+              confirmButtonText: "Yes, log-out!",
+            }).then((result) => {
+              if (result.isConfirmed) {
+                localStorage.removeItem("token");
 
-      }).then((result) => {
-        if (result.isConfirmed) {
-        localStorage.removeItem("token");
-
-          Swal.fire(
-            'Deleted!',
-            'Your file has been deleted.',
-            'success'
-          )
-          window.location.replace("/sign-in");
-
-        }
-      })
-      }}
+                Swal.fire("Deleted!", "Your file has been deleted.", "success");
+                window.location.replace("/sign-in");
+              }
+            });
+          }}
         >
           <div class="i">
             <svg
@@ -385,9 +358,9 @@
                       class="minus"
                       on:click={() => {
                         if (questionCount > 20) {
-                          questionCount = questionCount - 10
-                        }else {
-                          alert('Minimum 20 questions')
+                          questionCount = questionCount - 10;
+                        } else {
+                          alert("Minimum 20 questions");
                         }
                       }}>-</button
                     >
@@ -396,9 +369,9 @@
                       class="plus"
                       on:click={() => {
                         if (questionCount < 50) {
-                          questionCount = questionCount + 10
-                        }else {
-                          alert('Maximum 50 questions')
+                          questionCount = questionCount + 10;
+                        } else {
+                          alert("Maximum 50 questions");
                         }
                       }}>+</button
                     >
@@ -443,26 +416,31 @@
               <!-- svelte-ignore a11y-invalid-attribute -->
               <a
                 on:click={() => {
-                  getQuestionPaper(test_arr[test_catgry].exam , questionCount);
+                  getQuestionPaper(test_arr[test_catgry].exam, questionCount);
                   val = false;
                   testDate = new Date().toLocaleString([], { hour12: true });
                 }}
                 href="">Start</a
               >
-              <div class="test-close" on:click={()=>{
-                val2 = true;
-              }}><svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="34"
-                height="34"
-                fill="#57B973"
-                class="bi bi-x"
-                viewBox="0 0 16 16"
+              <div
+                class="test-close"
+                on:click={() => {
+                  val2 = true;
+                }}
               >
-                <path
-                  d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"
-                />
-              </svg></div>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="34"
+                  height="34"
+                  fill="#57B973"
+                  class="bi bi-x"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"
+                  />
+                </svg>
+              </div>
             </div>
           </div>
         {/if}
@@ -545,11 +523,14 @@
       >
     </main>
   </div>
-{:else}
-{#if questionPaper}
-<Test time={timer} test_Date={testDate} {questionPaper} subject = {test_arr[test_catgry].exam}
-token = {obj} />
-{/if}
+{:else if questionPaper}
+  <Test
+    time={timer}
+    test_Date={testDate}
+    {questionPaper}
+    subject={test_arr[test_catgry].exam}
+    token={obj}
+  />
 {/if}
 
 <style>
@@ -685,10 +666,12 @@ token = {obj} />
     background-color: #d9e4f5;
     color: #e62740;
   }
+
   main {
     width: 100%;
     text-align: center;
-    height: 100vh;
+    max-height: 100%;
+    min-height: 100vh;
     padding: 0 2rem;
     background-color: #d9e4f5;
     background-image: linear-gradient(315deg, #d9e4f5 0%, #f5e3e6 74%);

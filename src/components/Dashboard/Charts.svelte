@@ -6,12 +6,11 @@
 
   let obj = localStorage.getItem("token");
   onMount(prepare);
-  
+
   const user = {
     userName: "",
     e_mail: "",
   };
-
 
   async function prepare() {
     if (obj == null) {
@@ -162,31 +161,28 @@
         </div>
       </a>
       <!-- svelte-ignore a11y-invalid-attribute -->
-      <a href="" on:click={() => {
-        console.log(obj);
-        Swal.fire({
-        title: 'Are you sure?',
-          text: "Are you sure that you want to log-out?",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, log-out!'
+      <a
+        href=""
+        on:click={() => {
+          console.log(obj);
+          Swal.fire({
+            title: "Are you sure?",
+            text: "Are you sure that you want to log-out?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, log-out!",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              localStorage.removeItem("token");
 
-      }).then((result) => {
-        if (result.isConfirmed) {
-        localStorage.removeItem("token");
-
-          Swal.fire(
-            'Deleted!',
-            'Your file has been deleted.',
-            'success'
-          )
-          window.location.replace("/sign-in");
-
-        }
-      })
-      }}>
+              Swal.fire("Deleted!", "Your file has been deleted.", "success");
+              window.location.replace("/sign-in");
+            }
+          });
+        }}
+      >
         <div class="i">
           <svg
             xmlns="http://www.w3.org/2000/svg"
